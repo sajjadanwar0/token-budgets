@@ -122,30 +122,30 @@ use token_budgets::{Budget, ByteLength, TokenEstimator};
 const CAP: u64 = 1_000_000_000;  // $10 cap
 
 fn budget_aware_call(
-    budget: Budget<CAP>,
-    prompt: &str,
-    input_price_nc: u64,
-    output_price_nc: u64,
-    max_tokens: u32,
+  budget: Budget<CAP>,
+  prompt: &str,
+  input_price_nc: u64,
+  output_price_nc: u64,
+  max_tokens: u32,
 ) -> Result<Budget<CAP>, Box<dyn std::error::Error>> {
-    // 1. Estimate (sound upper bound via byte-length / A1)
-    let est_in_tokens = ByteLength.estimate(prompt);
-    let reservation_nc = est_in_tokens * input_price_nc
-        + (max_tokens as u64) * output_price_nc;
+  // 1. Estimate (sound upper bound via byte-length / A1)
+  let est_in_tokens = ByteLength.estimate(prompt);
+  let reservation_nc = est_in_tokens * input_price_nc
+          + (max_tokens as u64) * output_price_nc;
 
-    // 2. Reserve (consumes budget by value)
-    let (after_reserve, receipt) = budget.spend_with_receipt(reservation_nc)?;
+  // 2. Reserve (consumes budget by value)
+  let (after_reserve, receipt) = budget.spend_with_receipt(reservation_nc)?;
 
-    // 3. Perform the actual provider call (placeholder)
-    let actual_in_tokens: u64 = 0;   // <- from provider response
-    let actual_out_tokens: u64 = 0;  // <- from provider response
-    let actual_nc = actual_in_tokens * input_price_nc
-        + actual_out_tokens * output_price_nc;
+  // 3. Perform the actual provider call (placeholder)
+  let actual_in_tokens: u64 = 0;   // <- from provider response
+  let actual_out_tokens: u64 = 0;  // <- from provider response
+  let actual_nc = actual_in_tokens * input_price_nc
+          + actual_out_tokens * output_price_nc;
 
-    // 4. Confirm receipt (A1 check happens here; A1 violation fails noisily)
-    let refund = receipt.confirm(actual_nc)?;
-    let final_budget = refund.apply_to(after_reserve)?;
-    Ok(final_budget)
+  // 4. Confirm receipt (A1 check happens here; A1 violation fails noisily)
+  let refund = receipt.confirm(actual_nc)?;
+  let final_budget = refund.apply_to(after_reserve)?;
+  Ok(final_budget)
 }
 ```
 
@@ -178,10 +178,16 @@ The codebook at `data/budget-archaeology-codebook.md` defines the
 
 ### Honest scope on the catalog
 
-- **Inter-rater reliability is moderate, not strong.** κ=0.506
-  (LLM-on-human, n=30 stratified sample, two raters) — reported as
-  a codebook-stability statistic, not as inter-human IRR. An
-  independent two-human IRR study on a 50-row sample is open work.
+- **Inter-rater reliability is substantial.** Independent two-human
+  inter-rater agreement on a stratified 30-row sample: **Cohen's κ =
+  0.699** (95% bootstrap CI [0.458, 0.896]; 80% observed agreement).
+  Annotated by Sajjad Khan and Zahid Hussain (Mindgigs) using the v1.0
+  codebook. Per-class agreement ranges from 50% (`maintainer_framing`)
+  to 100% (`feature_request`); the `maintainer_framing` category is
+  the codebook's known weak spot and a target for refinement in v2.0.
+  Six disagreements out of 30 rows (CCDE-001, ATGN-018, DSPY-003,
+  SMAG-004, CRAI-009, PCLP-001) are adjudicated in
+  `data/irr-disagreements.md`.
 - **The 8 mechanism clusters are post-hoc analytic.** They emerged
   from the data rather than being independently derived.
 - **The catalog is a convenience sample** of GitHub issues found
