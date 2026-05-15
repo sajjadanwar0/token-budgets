@@ -1,0 +1,12 @@
+-Q . Top
+-Q /home/neo/lambda-rust/lifetime lrust.lifetime
+-Q /home/neo/lambda-rust/lambda-rust/lang lrust.lang
+-Q /home/neo/lambda-rust/lambda-rust/typing lrust.typing
+-arg -w -arg -notation-overridden
+-arg -w -arg -redundant-canonical-projection
+
+BudgetTypedCap.v
+BudgetIrisTypedCap.v
+BudgetRustBeltTypedCap.v
+BudgetTraceRefinementPure.v
+BudgetTraceRefinement.v

@@ -1,0 +1,187 @@
+DIGEST 3e775240e169f82bd9b62ab7bb2e7d80
+FTop.BudgetTraceRefinement
+R1213:1221 iris.proofmode.proofmode <> <> lib
+R1260:1269 iris.base_logic.lib.invariants <> <> lib
+R1307:1310 iris.heap_lang.lang <> <> lib
+R1312:1319 iris.heap_lang.notation <> <> lib
+R1321:1329 iris.heap_lang.proofmode <> <> lib
+R1357:1370 Top.BudgetAbstract <> <> lib
+R1397:1406 Top.BudgetIris <> <> lib
+R1433:1450 Top.BudgetIrisTypedCap <> <> lib
+R1477:1501 Top.BudgetTraceRefinementPure <> <> lib
+sec 1546:1573 <> budget_iris_trace_refinement
+R1587:1592 iris.heap_lang.primitive_laws <> heapGS abbrev
+binder 1594:1595 <> Σ:1
+binder 1586:1595 <> heapGS0:2
+prf 1973:2006 <> wp_spend_cap_preserves_value_bound
+R2015:2015 Coq.Numbers.BinNums <> Z ind
+binder 2009:2011 <> MAX:3
+R2023:2025 iris.heap_lang.locations <> loc rec
+binder 2019:2019 <> l:4
+R2035:2035 Coq.Numbers.BinNums <> Z ind
+binder 2029:2029 <> v:5
+binder 2031:2031 <> r:6
+R2053:2059 Coq.Unicode.Utf8_core <> ::type_scope:x_'→'_x not
+R2044:2048 stdpp.numbers <> ::Z_scope:x_'≤'_x not
+R2049:2049 Top.BudgetTraceRefinement <> r:6 var
+R2060:2063 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_x_'..'_x_','_'RET'_x_';'_x_'}'_'}'_'}' not
+R2086:2094 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_x_'..'_x_','_'RET'_x_';'_x_'}'_'}'_'}' not
+R2109:2116 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_x_'..'_x_','_'RET'_x_';'_x_'}'_'}'_'}' not
+R2151:2157 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_x_'..'_x_','_'RET'_x_';'_x_'}'_'}'_'}' not
+R2173:2180 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_x_'..'_x_','_'RET'_x_';'_x_'}'_'}'_'}' not
+R2457:2462 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_x_'..'_x_','_'RET'_x_';'_x_'}'_'}'_'}' not
+R2064:2077 Top.BudgetIrisTypedCap <> budget_inv_cap def
+R2079:2081 Top.BudgetTraceRefinement <> MAX:3 var
+R2083:2083 Top.BudgetTraceRefinement <> l:4 var
+R2085:2085 Top.BudgetTraceRefinement <> v:5 var
+R2127:2130 Coq.Init.Datatypes <> bool ind
+binder 2117:2123 <> success:7
+R2139:2141 iris.heap_lang.locations <> loc rec
+binder 2134:2135 <> l':8
+R2150:2150 Coq.Numbers.BinNums <> Z ind
+binder 2145:2146 <> v':9
+R2207:2218 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2456:2456 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2181:2183 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2204:2206 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2186:2190 stdpp.numbers <> ::Z_scope:x_'≤'_x_'≤'_x not
+R2193:2197 stdpp.numbers <> ::Z_scope:x_'≤'_x_'≤'_x not
+R2191:2192 Top.BudgetTraceRefinement <> v':9 var
+R2191:2192 Top.BudgetTraceRefinement <> v':9 var
+R2198:2200 Top.BudgetTraceRefinement <> MAX:3 var
+R2219:2219 iris.bi.interface <> ::bi_scope:x_'∨'_x not
+R2341:2361 iris.bi.interface <> ::bi_scope:x_'∨'_x not
+R2455:2455 iris.bi.interface <> ::bi_scope:x_'∨'_x not
+R2240:2244 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2220:2222 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2237:2239 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2230:2232 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2223:2229 Top.BudgetTraceRefinement <> success:7 var
+R2233:2236 Coq.Init.Datatypes <> true constr
+R2265:2269 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2245:2247 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2262:2264 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2250:2252 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2248:2249 Top.BudgetTraceRefinement <> v':9 var
+R2255:2257 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R2254:2254 Top.BudgetTraceRefinement <> v:5 var
+R2258:2258 Top.BudgetTraceRefinement <> r:6 var
+R2287:2291 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2270:2272 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2284:2286 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2275:2279 stdpp.numbers <> ::Z_scope:x_'≤'_x not
+R2274:2274 Top.BudgetTraceRefinement <> r:6 var
+R2280:2280 Top.BudgetTraceRefinement <> v:5 var
+R2304:2316 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2292:2294 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2301:2303 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2297:2299 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2295:2296 Top.BudgetTraceRefinement <> l':8 var
+R2300:2300 Top.BudgetTraceRefinement <> l:4 var
+R2317:2330 Top.BudgetIrisTypedCap <> budget_inv_cap def
+R2332:2334 Top.BudgetTraceRefinement <> MAX:3 var
+R2336:2337 Top.BudgetTraceRefinement <> l':8 var
+R2339:2340 Top.BudgetTraceRefinement <> v':9 var
+R2383:2387 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2362:2364 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2380:2382 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2372:2374 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2365:2371 Top.BudgetTraceRefinement <> success:7 var
+R2375:2379 Coq.Init.Datatypes <> false constr
+R2400:2404 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2388:2390 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2397:2399 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2393:2395 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2391:2392 Top.BudgetTraceRefinement <> v':9 var
+R2396:2396 Top.BudgetTraceRefinement <> v:5 var
+R2420:2432 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R2405:2407 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2417:2419 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R2410:2412 Coq.ZArith.BinInt <> ::Z_scope:x_'<'_x not
+R2409:2409 Top.BudgetTraceRefinement <> v:5 var
+R2413:2413 Top.BudgetTraceRefinement <> r:6 var
+R2433:2446 Top.BudgetIrisTypedCap <> budget_inv_cap def
+R2448:2450 Top.BudgetTraceRefinement <> MAX:3 var
+R2452:2452 Top.BudgetTraceRefinement <> l:4 var
+R2454:2454 Top.BudgetTraceRefinement <> v:5 var
+R2158:2158 iris.heap_lang.notation <> ::val_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2167:2168 iris.heap_lang.notation <> ::val_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2172:2172 iris.heap_lang.notation <> ::val_scope:'('_x_','_x_','_'..'_','_x_')' not
+R2159:2159 iris.heap_lang.notation <> :::'#'_x not
+R2160:2166 Top.BudgetTraceRefinement <> success:7 var
+R2169:2169 iris.heap_lang.notation <> :::'#'_x not
+R2170:2171 Top.BudgetTraceRefinement <> l':8 var
+R2095:2102 Top.BudgetIris <> spend_fn def
+R2104:2104 iris.heap_lang.notation <> :::'#'_x not
+R2105:2105 Top.BudgetTraceRefinement <> l:4 var
+R2107:2107 iris.heap_lang.notation <> :::'#'_x not
+R2108:2108 Top.BudgetTraceRefinement <> r:6 var
+R2550:2550 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R2559:2564 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R2569:2569 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R2551:2558 Top.BudgetIris <> wp_spend thm
+R2550:2550 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R2559:2564 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R2569:2569 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R2551:2558 Top.BudgetIris <> wp_spend thm
+R2737:2737 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2743:2746 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2754:2754 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2757:2757 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2767:2767 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2760:2762 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R2737:2737 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2743:2746 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2754:2754 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2757:2757 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2767:2767 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2760:2762 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R2991:2991 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2997:3000 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R3008:3008 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R3011:3011 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R3013:3013 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2991:2991 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R2997:3000 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R3008:3008 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R3011:3011 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+R3013:3013 iris.proofmode.ltac_tactics <> :::'('_x_'$!'_x_'..'_x_')' not
+prf 3219:3254 <> wp_consume_cap_preserves_value_bound
+R3263:3263 Coq.Numbers.BinNums <> Z ind
+binder 3257:3259 <> MAX:10
+R3271:3273 iris.heap_lang.locations <> loc rec
+binder 3267:3267 <> l:11
+R3281:3281 Coq.Numbers.BinNums <> Z ind
+binder 3277:3277 <> v:12
+R3288:3291 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_'RET'_x_';'_x_'}'_'}'_'}' not
+R3314:3322 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_'RET'_x_';'_x_'}'_'}'_'}' not
+R3336:3346 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_'RET'_x_';'_x_'}'_'}'_'}' not
+R3349:3356 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_'RET'_x_';'_x_'}'_'}'_'}' not
+R3411:3416 iris.bi.weakestpre <> ::stdpp_scope:'{{{'_x_'}'_'}'_'}'_x_'{{{'_'RET'_x_';'_x_'}'_'}'_'}' not
+R3292:3305 Top.BudgetIrisTypedCap <> budget_inv_cap def
+R3307:3309 Top.BudgetTraceRefinement <> MAX:10 var
+R3311:3311 Top.BudgetTraceRefinement <> l:11 var
+R3313:3313 Top.BudgetTraceRefinement <> v:12 var
+R3382:3386 iris.bi.interface <> ::bi_scope:x_'∗'_x not
+R3357:3359 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R3379:3381 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R3362:3366 stdpp.numbers <> ::Z_scope:x_'≤'_x_'≤'_x not
+R3368:3372 stdpp.numbers <> ::Z_scope:x_'≤'_x_'≤'_x not
+R3373:3375 Top.BudgetTraceRefinement <> MAX:10 var
+R3387:3400 Top.BudgetIrisTypedCap <> budget_inv_cap def
+R3402:3404 Top.BudgetTraceRefinement <> MAX:10 var
+R3406:3406 Top.BudgetTraceRefinement <> l:11 var
+R3347:3347 iris.heap_lang.notation <> :::'#'_x not
+R3348:3348 Top.BudgetTraceRefinement <> v:12 var
+R3323:3332 Top.BudgetIris <> consume_fn def
+R3334:3334 iris.heap_lang.notation <> :::'#'_x not
+R3335:3335 Top.BudgetTraceRefinement <> l:11 var
+R3501:3501 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R3512:3517 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R3522:3522 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R3502:3511 Top.BudgetIris <> wp_consume thm
+R3501:3501 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R3512:3517 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R3522:3522 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R3502:3511 Top.BudgetIris <> wp_consume thm
+R3653:3680 Top.BudgetTraceRefinement budget_iris_trace_refinement <> sec

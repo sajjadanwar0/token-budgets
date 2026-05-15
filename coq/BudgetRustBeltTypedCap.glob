@@ -1,0 +1,325 @@
+DIGEST bc6f3a1953c750f2ba726384b76fee0f
+FTop.BudgetRustBeltTypedCap
+R2052:2060 iris.proofmode.proofmode <> <> lib
+R2103:2112 iris.base_logic.lib.invariants <> <> lib
+R2147:2150 lrust.lang.lang <> <> lib
+R2152:2159 lrust.lang.notation <> <> lib
+R2197:2204 lrust.lifetime.lifetime <> <> lib
+R2240:2245 lrust.typing.typing <> <> lib
+R2247:2258 lrust.typing.type_context <> <> lib
+R2260:2271 lrust.typing.lft_contexts <> <> lib
+R2299:2312 Top.BudgetAbstract <> <> lib
+R2314:2330 Top.BudgetLinearTrace <> <> lib
+R2332:2341 Top.BudgetIris <> <> lib
+R2343:2356 Top.BudgetRustBelt <> <> lib
+sec 2401:2425 <> budget_rustbelt_typed_cap
+R2439:2444 lrust.typing.type <> typeGS class
+binder 2446:2447 <> Σ:1
+binder 2438:2447 <> typeGS0:2
+def 2518:2525 <> A2_bound
+R2529:2529 Coq.Numbers.BinNums <> Z ind
+prf 2579:2589 <> A2_bound_eq
+R2601:2603 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2593:2600 Top.BudgetRustBeltTypedCap <> A2_bound def
+R2606:2608 Coq.ZArith.BinInt <> ::Z_scope:x_'^'_x not
+R2630:2637 Top.BudgetRustBeltTypedCap <> A2_bound def
+def 3331:3340 <> budget_max
+R3349:3349 Coq.Numbers.BinNums <> Z ind
+binder 3343:3345 <> MAX:3
+R3354:3357 lrust.typing.type <> type rec
+R3367:3372 lrust.typing.type <> st_own proj
+R3367:3372 lrust.typing.type <> st_own proj
+R3367:3372 lrust.typing.type <> st_own proj
+binder 3374:3376 <> tid:4
+binder 3378:3379 <> vl:5
+R3397:3398 Top.BudgetRustBeltTypedCap <> vl:5 var
+R3423:3424 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R3436:3437 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R3425:3426 lrust.lang.notation <> :::'#'_x not
+R3435:3435 lrust.lang.notation <> :::'#'_x not
+R3427:3432 lrust.lang.lang <> LitInt constr
+R3442:3444 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R3487:3489 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R3464:3468 Coq.Unicode.Utf8_core <> ::type_scope:x_'∧'_x not
+R3447:3451 stdpp.numbers <> ::Z_scope:x_'≤'_x_'≤'_x not
+R3453:3457 stdpp.numbers <> ::Z_scope:x_'≤'_x_'≤'_x not
+R3458:3460 Top.BudgetRustBeltTypedCap <> MAX:3 var
+R3473:3475 Coq.ZArith.BinInt <> ::Z_scope:x_'<'_x not
+R3470:3472 Top.BudgetRustBeltTypedCap <> MAX:3 var
+R3476:3483 Top.BudgetRustBeltTypedCap <> A2_bound def
+R3505:3509 iris.bi.interface <> ::bi_scope:'False' not
+inst 3719:3731 <> budget_max_wf
+binder 3733:3735 <> MAX:7
+R3739:3742 lrust.typing.type <> TyWf class
+R3745:3754 Top.BudgetRustBeltTypedCap <> budget_max def
+R3756:3758 Top.BudgetRustBeltTypedCap <> MAX:7 var
+R3783:3789 lrust.typing.type <> ty_wf_E meth
+R3768:3774 lrust.typing.type <> ty_lfts meth
+R3779:3780 Coq.Lists.List ListNotations ::list_scope:'['_']' not
+R3794:3795 Coq.Lists.List ListNotations ::list_scope:'['_']' not
+def 3838:3852 <> budget_type_max
+R3861:3861 Coq.Numbers.BinNums <> Z ind
+binder 3855:3857 <> MAX:8
+R3866:3869 lrust.typing.type <> type rec
+R3874:3883 Top.BudgetRustBeltTypedCap <> budget_max def
+R3885:3887 Top.BudgetRustBeltTypedCap <> MAX:8 var
+def 4701:4712 <> spend_lr_max
+R4716:4718 lrust.lang.lang <> val ind
+R4725:4728 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R4739:4742 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R4729:4729 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R4733:4734 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R4738:4738 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R4761:4764 lrust.lang.notation <> ::expr_scope:x_';;'_x not
+R4765:4777 lrust.lang.notation <> ::expr_scope:'return:' not
+R4773:4773 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R4777:4777 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R4743:4748 lrust.lang.lib.new_delete <> delete def
+R4750:4751 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R4754:4755 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R4759:4760 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R4752:4752 lrust.lang.notation <> ::expr_scope:'#'_x not
+prf 4787:4806 <> spend_well_typed_max
+R4815:4815 Coq.Numbers.BinNums <> Z ind
+binder 4809:4811 <> MAX:9
+R4822:4830 lrust.typing.programs <> typed_val def
+R4846:4848 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R4852:4853 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R4868:4869 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R4873:4878 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R4849:4851 stdpp.base <> ::stdpp_scope:'∅' not
+R4854:4863 Top.BudgetRustBeltTypedCap <> budget_max def
+R4865:4867 Top.BudgetRustBeltTypedCap <> MAX:9 var
+R4870:4872 lrust.typing.int <> int def
+R4879:4888 Top.BudgetRustBeltTypedCap <> budget_max def
+R4890:4892 Top.BudgetRustBeltTypedCap <> MAX:9 var
+R4832:4843 Top.BudgetRustBeltTypedCap <> spend_lr_max def
+R4924:4930 lrust.typing.function <> type_fn thm
+R4924:4930 lrust.typing.function <> type_fn thm
+R5036:5046 lrust.typing.own <> type_delete thm
+R5036:5046 lrust.typing.own <> type_delete thm
+R5077:5085 lrust.typing.cont <> type_jump thm
+R5077:5085 lrust.typing.cont <> type_jump thm
+def 5186:5197 <> split_lr_max
+R5201:5203 lrust.lang.lang <> val ind
+R5210:5213 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R5224:5227 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R5214:5214 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5218:5219 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5223:5223 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5246:5249 lrust.lang.notation <> ::expr_scope:x_';;'_x not
+R5250:5262 lrust.lang.notation <> ::expr_scope:'return:' not
+R5258:5258 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R5262:5262 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R5228:5233 lrust.lang.lib.new_delete <> delete def
+R5235:5236 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5239:5240 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5244:5245 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5237:5237 lrust.lang.notation <> ::expr_scope:'#'_x not
+prf 5272:5291 <> split_well_typed_max
+R5300:5300 Coq.Numbers.BinNums <> Z ind
+binder 5294:5296 <> MAX:10
+R5307:5315 lrust.typing.programs <> typed_val def
+R5331:5333 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5337:5338 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5353:5354 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5358:5363 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5334:5336 stdpp.base <> ::stdpp_scope:'∅' not
+R5339:5348 Top.BudgetRustBeltTypedCap <> budget_max def
+R5350:5352 Top.BudgetRustBeltTypedCap <> MAX:10 var
+R5355:5357 lrust.typing.int <> int def
+R5364:5373 Top.BudgetRustBeltTypedCap <> budget_max def
+R5375:5377 Top.BudgetRustBeltTypedCap <> MAX:10 var
+R5317:5328 Top.BudgetRustBeltTypedCap <> split_lr_max def
+R5409:5415 lrust.typing.function <> type_fn thm
+R5409:5415 lrust.typing.function <> type_fn thm
+R5521:5531 lrust.typing.own <> type_delete thm
+R5521:5531 lrust.typing.own <> type_delete thm
+R5562:5570 lrust.typing.cont <> type_jump thm
+R5562:5570 lrust.typing.cont <> type_jump thm
+def 5732:5743 <> merge_lr_max
+R5747:5749 lrust.lang.lang <> val ind
+R5756:5759 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R5772:5775 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R5760:5760 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5765:5766 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5771:5771 lrust.lang.lang <> ::binder_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5795:5798 lrust.lang.notation <> ::expr_scope:x_';;'_x not
+R5799:5812 lrust.lang.notation <> ::expr_scope:'return:' not
+R5807:5807 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R5812:5812 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R5776:5781 lrust.lang.lib.new_delete <> delete def
+R5783:5784 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5787:5788 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5793:5794 lrust.lang.notation <> ::expr_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5785:5785 lrust.lang.notation <> ::expr_scope:'#'_x not
+prf 5822:5841 <> merge_well_typed_max
+R5850:5850 Coq.Numbers.BinNums <> Z ind
+binder 5844:5846 <> MAX:11
+R5857:5865 lrust.typing.programs <> typed_val def
+R5881:5883 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5887:5888 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5903:5904 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5919:5924 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R5884:5886 stdpp.base <> ::stdpp_scope:'∅' not
+R5889:5898 Top.BudgetRustBeltTypedCap <> budget_max def
+R5900:5902 Top.BudgetRustBeltTypedCap <> MAX:11 var
+R5905:5914 Top.BudgetRustBeltTypedCap <> budget_max def
+R5916:5918 Top.BudgetRustBeltTypedCap <> MAX:11 var
+R5925:5934 Top.BudgetRustBeltTypedCap <> budget_max def
+R5936:5938 Top.BudgetRustBeltTypedCap <> MAX:11 var
+R5867:5878 Top.BudgetRustBeltTypedCap <> merge_lr_max def
+R5970:5976 lrust.typing.function <> type_fn thm
+R5970:5976 lrust.typing.function <> type_fn thm
+R6084:6094 lrust.typing.own <> type_delete thm
+R6084:6094 lrust.typing.own <> type_delete thm
+R6125:6133 lrust.typing.cont <> type_jump thm
+R6125:6133 lrust.typing.cont <> type_jump thm
+def 6236:6249 <> consume_lr_max
+R6253:6255 lrust.lang.lang <> val ind
+R6262:6265 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R6271:6274 lrust.lang.notation <> ::val_scope:'fn:'_x_':='_x not
+R6266:6266 lrust.lang.lang <> ::binder_scope:'['_x_']' not
+R6270:6270 lrust.lang.lang <> ::binder_scope:'['_x_']' not
+R6279:6282 lrust.lang.notation <> ::expr_scope:x_';;'_x not
+R6283:6295 lrust.lang.notation <> ::expr_scope:'return:' not
+R6291:6291 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R6295:6295 lrust.lang.notation <> ::expr_scope:'['_x_']' not
+R6275:6278 lrust.lang.lang <> Skip abbrev
+prf 6305:6326 <> consume_well_typed_max
+R6335:6335 Coq.Numbers.BinNums <> Z ind
+binder 6329:6331 <> MAX:12
+R6342:6350 lrust.typing.programs <> typed_val def
+R6368:6370 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R6374:6375 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R6390:6395 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R6371:6373 stdpp.base <> ::stdpp_scope:'∅' not
+R6376:6385 Top.BudgetRustBeltTypedCap <> budget_max def
+R6387:6389 Top.BudgetRustBeltTypedCap <> MAX:12 var
+R6396:6405 Top.BudgetRustBeltTypedCap <> budget_max def
+R6407:6409 Top.BudgetRustBeltTypedCap <> MAX:12 var
+R6352:6365 Top.BudgetRustBeltTypedCap <> consume_lr_max def
+R6441:6447 lrust.typing.function <> type_fn thm
+R6441:6447 lrust.typing.function <> type_fn thm
+R6612:6612 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R6660:6675 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R6702:6702 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R6613:6621 lrust.typing.programs <> type_type thm
+R6623:6624 Coq.Lists.List ListNotations ::list_scope:'['_']' not
+R6630:6631 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R6658:6659 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R6633:6637 lrust.typing.type_context <> :::x_'◁'_x not
+R6638:6640 lrust.typing.own <> box def
+R6643:6652 Top.BudgetRustBeltTypedCap <> budget_max def
+R6612:6612 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R6660:6675 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R6702:6702 iris.proofmode.ltac_tactics <> :::'('_x_'with'_x_')' not
+R6613:6621 lrust.typing.programs <> type_type thm
+R6623:6624 Coq.Lists.List ListNotations ::list_scope:'['_']' not
+R6630:6631 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R6658:6659 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R6633:6637 lrust.typing.type_context <> :::x_'◁'_x not
+R6638:6640 lrust.typing.own <> box def
+R6643:6652 Top.BudgetRustBeltTypedCap <> budget_max def
+R6732:6752 lrust.typing.type_context <> tctx_interp_singleton thm
+R6754:6767 lrust.typing.type_context <> tctx_hasty_val thm
+R6732:6752 lrust.typing.type_context <> tctx_interp_singleton thm
+R6732:6752 lrust.typing.type_context <> tctx_interp_singleton thm
+R6754:6767 lrust.typing.type_context <> tctx_hasty_val thm
+R6754:6767 lrust.typing.type_context <> tctx_hasty_val thm
+R6788:6799 lrust.typing.lft_contexts <> elctx_interp def
+R6788:6799 lrust.typing.lft_contexts <> elctx_interp def
+R6788:6799 lrust.typing.lft_contexts <> elctx_interp def
+R6813:6821 lrust.typing.cont <> type_jump thm
+R6813:6821 lrust.typing.cont <> type_jump thm
+def 7108:7132 <> conservation_inv_name_max
+R7136:7144 stdpp.namespaces <> namespace def
+R7154:7157 stdpp.namespaces <> ::stdpp_scope:x_'.@'_x not
+R7149:7153 stdpp.namespaces <> nroot def
+prf 7192:7213 <> conservation_alloc_max
+R7222:7222 Coq.Numbers.BinNums <> Z ind
+binder 7216:7218 <> MAX:13
+R7231:7233 Coq.Init.Datatypes <> nat ind
+binder 7226:7227 <> B0:14
+binder 7236:7236 <> E:15
+R7276:7282 Coq.Unicode.Utf8_core <> ::type_scope:x_'→'_x not
+R7270:7274 stdpp.base <> ::stdpp_scope:x_'⊆'_x not
+R7242:7244 stdpp.base <> :::'↑'_x not
+R7245:7269 Top.BudgetRustBeltTypedCap <> conservation_inv_name_max def
+R7275:7275 Top.BudgetRustBeltTypedCap <> E:15 var
+R7283:7286 iris.bi.interface <> ::stdpp_scope:'⊢'_x not
+R7287:7289 iris.bi.updates <> ::bi_scope:'|={'_x_'}=>'_x not
+R7291:7294 iris.bi.updates <> ::bi_scope:'|={'_x_'}=>'_x not
+R7290:7290 Top.BudgetRustBeltTypedCap <> E:15 var
+R7290:7290 Top.BudgetRustBeltTypedCap <> E:15 var
+R7295:7297 iris.base_logic.lib.invariants <> inv def
+R7326:7328 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R7333:7335 iris.bi.interface <> ::bi_scope:'⌜'_x_'⌝' not
+R7329:7332 stdpp.base <> ::type_scope:'True' not
+R7299:7323 Top.BudgetRustBeltTypedCap <> conservation_inv_name_max def
+R7370:7378 iris.base_logic.lib.invariants <> inv_alloc thm
+R7370:7378 iris.base_logic.lib.invariants <> inv_alloc thm
+prf 7723:7753 <> rust_to_abstract_refinement_max
+R7759:7766 stdpp.base <> ::type_scope:'forall'_x_'..'_x_','_x not
+R7774:7780 stdpp.base <> ::type_scope:'forall'_x_'..'_x_','_x not
+R7773:7773 Coq.Numbers.BinNums <> Z ind
+binder 7767:7769 <> MAX:16
+R7855:7862 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R7781:7789 lrust.typing.programs <> typed_val def
+R7807:7809 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7813:7814 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7829:7830 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7834:7839 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7810:7812 stdpp.base <> ::stdpp_scope:'∅' not
+R7815:7824 Top.BudgetRustBeltTypedCap <> budget_max def
+R7826:7828 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R7831:7833 lrust.typing.int <> int def
+R7840:7849 Top.BudgetRustBeltTypedCap <> budget_max def
+R7851:7853 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R7791:7802 Top.BudgetRustBeltTypedCap <> spend_lr_max def
+R7937:7944 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R7863:7871 lrust.typing.programs <> typed_val def
+R7889:7891 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7895:7896 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7911:7912 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7916:7921 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7892:7894 stdpp.base <> ::stdpp_scope:'∅' not
+R7897:7906 Top.BudgetRustBeltTypedCap <> budget_max def
+R7908:7910 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R7913:7915 lrust.typing.int <> int def
+R7922:7931 Top.BudgetRustBeltTypedCap <> budget_max def
+R7933:7935 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R7873:7884 Top.BudgetRustBeltTypedCap <> split_lr_max def
+R8030:8037 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R7945:7953 lrust.typing.programs <> typed_val def
+R7971:7973 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7977:7978 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7993:7994 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R8009:8014 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R7974:7976 stdpp.base <> ::stdpp_scope:'∅' not
+R7979:7988 Top.BudgetRustBeltTypedCap <> budget_max def
+R7990:7992 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R7995:8004 Top.BudgetRustBeltTypedCap <> budget_max def
+R8006:8008 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R8015:8024 Top.BudgetRustBeltTypedCap <> budget_max def
+R8026:8028 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R7955:7966 Top.BudgetRustBeltTypedCap <> merge_lr_max def
+R8038:8046 lrust.typing.programs <> typed_val def
+R8064:8066 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R8070:8071 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R8086:8091 lrust.typing.function <> ::lrust_type_scope:'fn('_x_';'_x_','_'..'_','_x_')'_'→'_x not
+R8067:8069 stdpp.base <> ::stdpp_scope:'∅' not
+R8072:8081 Top.BudgetRustBeltTypedCap <> budget_max def
+R8083:8085 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R8092:8101 Top.BudgetRustBeltTypedCap <> budget_max def
+R8103:8105 Top.BudgetRustBeltTypedCap <> MAX:16 var
+R8048:8061 Top.BudgetRustBeltTypedCap <> consume_lr_max def
+R8152:8171 Top.BudgetRustBeltTypedCap <> spend_well_typed_max thm
+R8152:8171 Top.BudgetRustBeltTypedCap <> spend_well_typed_max thm
+R8184:8203 Top.BudgetRustBeltTypedCap <> split_well_typed_max thm
+R8184:8203 Top.BudgetRustBeltTypedCap <> split_well_typed_max thm
+R8216:8235 Top.BudgetRustBeltTypedCap <> merge_well_typed_max thm
+R8216:8235 Top.BudgetRustBeltTypedCap <> merge_well_typed_max thm
+R8248:8269 Top.BudgetRustBeltTypedCap <> consume_well_typed_max thm
+R8248:8269 Top.BudgetRustBeltTypedCap <> consume_well_typed_max thm
+R8282:8306 Top.BudgetRustBeltTypedCap budget_rustbelt_typed_cap <> sec

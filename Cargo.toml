@@ -1,0 +1,21 @@
+[package]
+name        = "token-budgets"
+version     = "0.5.0"
+edition     = "2021"
+# ... rest of package metadata
+
+[dependencies]
+tiktoken-rs = { version = "0.11.0", optional = true }
+anyhow      = "1"
+
+[dev-dependencies]
+# (move dev-only deps here — trybuild, criterion, tokio for tests, etc.)
+criterion   = "0.8.2"
+
+[features]
+default = []
+tiktoken = ["dep:tiktoken-rs"]
+
+[[bench]]
+name = "spend_bench"
+harness = false

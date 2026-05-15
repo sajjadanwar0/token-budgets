@@ -1,0 +1,716 @@
+DIGEST 232585277b7be2840803d14f492945f0
+FTop.BudgetTypedCap
+R2181:2186 Coq.ZArith.ZArith <> <> lib
+R2188:2190 Coq.micromega.Lia <> <> lib
+R2192:2195 Coq.Lists.List <> <> lib
+R2197:2200 Coq.Bool.Bool <> <> lib
+R2210:2222 Coq.Lists.List ListNotations <> mod
+def 2257:2258 <> uc
+R2263:2263 Coq.Numbers.BinNums <> Z ind
+def 2491:2498 <> A2_bound
+R2502:2502 Coq.Numbers.BinNums <> Z ind
+prf 2550:2560 <> A2_bound_eq
+R2572:2574 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R2564:2571 Top.BudgetTypedCap <> A2_bound def
+R2576:2578 Coq.ZArith.BinInt <> ::Z_scope:x_'^'_x not
+R2597:2604 Top.BudgetTypedCap <> A2_bound def
+rec 2982:2986 <> state
+proj 3003:3006 <> live
+proj 3026:3034 <> committed
+R3015:3018 Coq.Init.Datatypes <> list ind
+R3020:3021 Top.BudgetTypedCap <> uc def
+R3038:3039 Top.BudgetTypedCap <> uc def
+def 3057:3064 <> sum_live
+R3071:3075 Top.BudgetTypedCap <> state rec
+binder 3067:3067 <> s:4
+R3080:3081 Top.BudgetTypedCap <> uc def
+R3088:3097 Coq.Lists.List <> fold_right def
+R3108:3111 Top.BudgetTypedCap <> live proj
+R3113:3113 Top.BudgetTypedCap <> s:4 var
+R3099:3103 Coq.ZArith.BinInt Z add def
+def 3129:3133 <> total
+R3140:3144 Top.BudgetTypedCap <> state rec
+binder 3136:3136 <> s:5
+R3149:3150 Top.BudgetTypedCap <> uc def
+R3167:3169 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R3157:3164 Top.BudgetTypedCap <> sum_live def
+R3166:3166 Top.BudgetTypedCap <> s:5 var
+R3170:3178 Top.BudgetTypedCap <> committed proj
+R3180:3180 Top.BudgetTypedCap <> s:5 var
+def 3244:3247 <> init
+R3256:3257 Top.BudgetTypedCap <> uc def
+binder 3250:3252 <> MAX:6
+R3262:3266 Top.BudgetTypedCap <> state rec
+R3273:3279 Top.BudgetTypedCap <> mkState constr
+R3281:3281 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R3285:3285 Coq.Lists.List ListNotations ::list_scope:'['_x_']' not
+R3282:3284 Top.BudgetTypedCap <> MAX:6 var
+ind 3514:3515 <> op
+constr 3529:3533 <> Spend
+constr 3563:3567 <> Split
+constr 3597:3601 <> Merge
+R3542:3544 Coq.Init.Datatypes <> nat ind
+binder 3536:3538 <> idx:9
+R3557:3558 Top.BudgetTypedCap <> uc def
+binder 3548:3553 <> amount:10
+R3576:3578 Coq.Init.Datatypes <> nat ind
+binder 3570:3572 <> idx:11
+R3591:3592 Top.BudgetTypedCap <> uc def
+binder 3582:3587 <> amount:12
+R3610:3612 Coq.Init.Datatypes <> nat ind
+binder 3604:3604 <> i:13
+binder 3606:3606 <> j:14
+scheme 3514:3515 <> op_rect
+scheme 3514:3515 <> op_ind
+scheme 3514:3515 <> op_rec
+scheme 3514:3515 <> op_sind
+def 3646:3654 <> remove_at
+binder 3657:3657 <> A:15
+R3666:3669 Coq.Init.Datatypes <> list ind
+R3671:3671 Top.BudgetTypedCap <> A:15 var
+binder 3661:3662 <> xs:16
+R3679:3681 Coq.Init.Datatypes <> nat ind
+binder 3675:3675 <> n:17
+R3686:3689 Coq.Init.Datatypes <> list ind
+R3691:3691 Top.BudgetTypedCap <> A:15 var
+R3708:3708 Top.BudgetTypedCap <> n:17 var
+R3704:3705 Top.BudgetTypedCap <> xs:16 var
+R3719:3720 Coq.Lists.List ListNotations ::list_scope:'['_']' not
+R3738:3739 Coq.Lists.List ListNotations ::list_scope:'['_']' not
+R3746:3749 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3755:3755 Coq.Init.Datatypes <> O constr
+R3773:3776 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3782:3782 Coq.Init.Datatypes <> S constr
+R3792:3795 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3796:3804 Top.BudgetTypedCap <> remove_at:18 def
+def 3830:3836 <> nth_opt
+binder 3839:3839 <> A:21
+R3848:3851 Coq.Init.Datatypes <> list ind
+R3853:3853 Top.BudgetTypedCap <> A:21 var
+binder 3843:3844 <> xs:22
+R3861:3863 Coq.Init.Datatypes <> nat ind
+binder 3857:3857 <> n:23
+R3868:3873 Coq.Init.Datatypes <> option ind
+R3875:3875 Top.BudgetTypedCap <> A:21 var
+R3892:3892 Top.BudgetTypedCap <> n:23 var
+R3888:3889 Top.BudgetTypedCap <> xs:22 var
+R3903:3904 Coq.Lists.List ListNotations ::list_scope:'['_']' not
+R3921:3924 Coq.Init.Datatypes <> None constr
+R3931:3934 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3939:3939 Coq.Init.Datatypes <> O constr
+R3948:3951 Coq.Init.Datatypes <> Some constr
+R3960:3963 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R3969:3969 Coq.Init.Datatypes <> S constr
+R3977:3983 Top.BudgetTypedCap <> nth_opt:24 def
+def 4227:4230 <> step
+R4239:4240 Top.BudgetTypedCap <> uc def
+binder 4233:4235 <> MAX:27
+R4248:4252 Top.BudgetTypedCap <> state rec
+binder 4244:4244 <> s:28
+R4260:4261 Top.BudgetTypedCap <> op ind
+binder 4256:4256 <> o:29
+R4266:4270 Top.BudgetTypedCap <> state rec
+R4283:4283 Top.BudgetTypedCap <> o:29 var
+R4294:4298 Top.BudgetTypedCap <> Spend constr
+R4323:4329 Top.BudgetTypedCap <> nth_opt def
+R4332:4335 Top.BudgetTypedCap <> live proj
+R4337:4337 Top.BudgetTypedCap <> s:28 var
+R4357:4360 Coq.Init.Datatypes <> None constr
+R4371:4371 Top.BudgetTypedCap <> s:28 var
+R4381:4384 Coq.Init.Datatypes <> Some constr
+R4408:4411 Coq.Init.Datatypes <> andb def
+R4429:4433 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R4415:4419 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R4563:4563 Top.BudgetTypedCap <> s:28 var
+R4454:4460 Top.BudgetTypedCap <> mkState constr
+R4477:4477 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4485:4489 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4479:4481 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R4490:4498 Top.BudgetTypedCap <> remove_at def
+R4501:4504 Top.BudgetTypedCap <> live proj
+R4506:4506 Top.BudgetTypedCap <> s:28 var
+R4540:4542 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R4529:4537 Top.BudgetTypedCap <> committed proj
+R4539:4539 Top.BudgetTypedCap <> s:28 var
+R4579:4583 Top.BudgetTypedCap <> Split constr
+R4608:4614 Top.BudgetTypedCap <> nth_opt def
+R4617:4620 Top.BudgetTypedCap <> live proj
+R4622:4622 Top.BudgetTypedCap <> s:28 var
+R4642:4645 Coq.Init.Datatypes <> None constr
+R4656:4656 Top.BudgetTypedCap <> s:28 var
+R4666:4669 Coq.Init.Datatypes <> Some constr
+R4693:4696 Coq.Init.Datatypes <> andb def
+R4714:4718 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R4700:4704 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R4849:4849 Top.BudgetTypedCap <> s:28 var
+R4739:4745 Top.BudgetTypedCap <> mkState constr
+R4765:4768 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4769:4769 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4777:4781 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R4771:4773 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R4782:4790 Top.BudgetTypedCap <> remove_at def
+R4793:4796 Top.BudgetTypedCap <> live proj
+R4798:4798 Top.BudgetTypedCap <> s:28 var
+R4821:4829 Top.BudgetTypedCap <> committed proj
+R4831:4831 Top.BudgetTypedCap <> s:28 var
+R4865:4869 Top.BudgetTypedCap <> Merge constr
+R4887:4893 Coq.Arith.PeanoNat Nat eqb def
+R4943:4949 Top.BudgetTypedCap <> nth_opt def
+R4952:4955 Top.BudgetTypedCap <> live proj
+R4957:4957 Top.BudgetTypedCap <> s:28 var
+R4923:4929 Top.BudgetTypedCap <> nth_opt def
+R4932:4935 Top.BudgetTypedCap <> live proj
+R4937:4937 Top.BudgetTypedCap <> s:28 var
+R4975:4978 Coq.Init.Datatypes <> Some constr
+R4984:4987 Coq.Init.Datatypes <> Some constr
+R5008:5008 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R5016:5021 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R5011:5013 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R5022:5024 Top.BudgetTypedCap <> MAX:27 var
+R5237:5237 Top.BudgetTypedCap <> s:28 var
+R5063:5071 Top.BudgetTypedCap <> remove_at def
+R5083:5085 Coq.Init.Peano <> max abbrev
+R5074:5077 Top.BudgetTypedCap <> live proj
+R5079:5079 Top.BudgetTypedCap <> s:28 var
+binder 5047:5057 <> removed_one:31
+R5127:5135 Top.BudgetTypedCap <> remove_at def
+R5150:5152 Coq.Init.Peano <> min abbrev
+R5137:5147 Top.BudgetTypedCap <> removed_one:31 var
+binder 5111:5122 <> removed_both:32
+R5174:5180 Top.BudgetTypedCap <> mkState constr
+R5190:5193 Coq.Init.Datatypes <> ::list_scope:x_'::'_x not
+R5185:5187 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R5194:5205 Top.BudgetTypedCap <> removed_both:32 var
+R5209:5217 Top.BudgetTypedCap <> committed proj
+R5219:5219 Top.BudgetTypedCap <> s:28 var
+R5255:5255 Top.BudgetTypedCap <> s:28 var
+R4904:4904 Top.BudgetTypedCap <> s:28 var
+def 5499:5507 <> invariant
+R5516:5517 Top.BudgetTypedCap <> uc def
+binder 5510:5512 <> MAX:33
+R5525:5529 Top.BudgetTypedCap <> state rec
+binder 5521:5521 <> s:34
+R5558:5561 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R5551:5554 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x not
+R5544:5548 Top.BudgetTypedCap <> total def
+R5550:5550 Top.BudgetTypedCap <> s:34 var
+R5555:5557 Top.BudgetTypedCap <> MAX:33 var
+R5578:5581 Coq.Init.Logic <> ::type_scope:x_'/\'_x not
+R5573:5576 Coq.ZArith.BinInt <> ::Z_scope:x_'>='_x not
+R5562:5570 Top.BudgetTypedCap <> committed proj
+R5572:5572 Top.BudgetTypedCap <> s:34 var
+R5582:5587 Coq.Lists.List <> Forall ind
+R5608:5611 Top.BudgetTypedCap <> live proj
+R5613:5613 Top.BudgetTypedCap <> s:34 var
+binder 5594:5594 <> v:35
+R5600:5603 Coq.ZArith.BinInt <> ::Z_scope:x_'>='_x not
+R5599:5599 Top.BudgetTypedCap <> v:35 var
+ind 5648:5656 <> reachable
+constr 5690:5699 <> reach_init
+constr 5731:5740 <> reach_step
+R5665:5666 Top.BudgetTypedCap <> uc def
+binder 5659:5661 <> MAX:36
+R5676:5679 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5671:5675 Top.BudgetTypedCap <> state rec
+R5704:5712 Top.BudgetTypedCap <> reachable:37 ind
+R5719:5722 Top.BudgetTypedCap <> init def
+R5724:5726 Top.BudgetTypedCap <> MAX:36 var
+R5714:5716 Top.BudgetTypedCap <> MAX:36 var
+binder 5752:5752 <> s:39
+binder 5754:5754 <> o:40
+R5772:5775 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R5757:5765 Top.BudgetTypedCap <> reachable:37 ind
+R5771:5771 Top.BudgetTypedCap <> s:39 var
+R5767:5769 Top.BudgetTypedCap <> MAX:36 var
+R5776:5784 Top.BudgetTypedCap <> reachable:37 ind
+R5791:5794 Top.BudgetTypedCap <> step def
+R5796:5798 Top.BudgetTypedCap <> MAX:36 var
+R5800:5800 Top.BudgetTypedCap <> s:39 var
+R5802:5802 Top.BudgetTypedCap <> o:40 var
+R5786:5788 Top.BudgetTypedCap <> MAX:36 var
+scheme 5648:5656 <> reachable_ind
+scheme 5648:5656 <> reachable_sind
+prf 6026:6040 <> sum_live_nonneg
+binder 6051:6052 <> xs:41
+R6084:6089 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6057:6062 Coq.Lists.List <> Forall ind
+R6082:6083 Top.BudgetTypedCap <> xs:41 var
+binder 6069:6069 <> v:42
+R6075:6078 Coq.ZArith.BinInt <> ::Z_scope:x_'>='_x not
+R6074:6074 Top.BudgetTypedCap <> v:42 var
+R6111:6114 Coq.ZArith.BinInt <> ::Z_scope:x_'>='_x not
+R6090:6099 Coq.Lists.List <> fold_right def
+R6109:6110 Top.BudgetTypedCap <> xs:41 var
+R6101:6105 Coq.ZArith.BinInt Z add def
+prf 6242:6251 <> nth_opt_in
+binder 6263:6263 <> A:43
+R6272:6275 Coq.Init.Datatypes <> list ind
+R6277:6277 Top.BudgetTypedCap <> A:43 var
+binder 6267:6268 <> xs:44
+binder 6280:6280 <> n:45
+binder 6282:6282 <> x:46
+R6308:6311 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6299:6301 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R6287:6293 Top.BudgetTypedCap <> nth_opt def
+R6298:6298 Top.BudgetTypedCap <> n:45 var
+R6295:6296 Top.BudgetTypedCap <> xs:44 var
+R6302:6305 Coq.Init.Datatypes <> Some constr
+R6307:6307 Top.BudgetTypedCap <> x:46 var
+R6312:6313 Coq.Lists.List <> In def
+R6317:6318 Top.BudgetTypedCap <> xs:44 var
+R6315:6315 Top.BudgetTypedCap <> x:46 var
+prf 6535:6544 <> forall_nth
+binder 6556:6556 <> A:47
+R6565:6568 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6564:6564 Top.BudgetTypedCap <> A:47 var
+binder 6560:6560 <> P:48
+binder 6575:6576 <> xs:49
+binder 6578:6578 <> n:50
+binder 6580:6580 <> x:51
+R6596:6599 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6585:6590 Coq.Lists.List <> Forall ind
+R6594:6595 Top.BudgetTypedCap <> xs:49 var
+R6592:6592 Top.BudgetTypedCap <> P:48 var
+R6621:6624 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6612:6614 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R6600:6606 Top.BudgetTypedCap <> nth_opt def
+R6611:6611 Top.BudgetTypedCap <> n:50 var
+R6608:6609 Top.BudgetTypedCap <> xs:49 var
+R6615:6618 Coq.Init.Datatypes <> Some constr
+R6620:6620 Top.BudgetTypedCap <> x:51 var
+R6625:6625 Top.BudgetTypedCap <> P:48 var
+R6627:6627 Top.BudgetTypedCap <> x:51 var
+R6672:6681 Top.BudgetTypedCap <> nth_opt_in thm
+R6672:6681 Top.BudgetTypedCap <> nth_opt_in thm
+R6700:6712 Coq.Lists.List <> Forall_forall thm
+R6700:6712 Coq.Lists.List <> Forall_forall thm
+R6700:6712 Coq.Lists.List <> Forall_forall thm
+prf 6755:6767 <> sum_remove_at
+binder 6778:6779 <> xs:52
+binder 6781:6781 <> n:53
+binder 6783:6783 <> v:54
+R6809:6814 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R6800:6802 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R6788:6794 Top.BudgetTypedCap <> nth_opt def
+R6799:6799 Top.BudgetTypedCap <> n:53 var
+R6796:6797 Top.BudgetTypedCap <> xs:52 var
+R6803:6806 Coq.Init.Datatypes <> Some constr
+R6808:6808 Top.BudgetTypedCap <> v:54 var
+R6850:6852 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R6815:6824 Coq.Lists.List <> fold_right def
+R6835:6843 Top.BudgetTypedCap <> remove_at def
+R6848:6848 Top.BudgetTypedCap <> n:53 var
+R6845:6846 Top.BudgetTypedCap <> xs:52 var
+R6826:6830 Coq.ZArith.BinInt Z add def
+R6874:6876 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R6853:6862 Coq.Lists.List <> fold_right def
+R6872:6873 Top.BudgetTypedCap <> xs:52 var
+R6864:6868 Coq.ZArith.BinInt Z add def
+R6877:6877 Top.BudgetTypedCap <> v:54 var
+prf 7064:7079 <> forall_remove_at
+binder 7091:7091 <> A:55
+R7100:7103 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7099:7099 Top.BudgetTypedCap <> A:55 var
+binder 7095:7095 <> P:56
+binder 7110:7111 <> xs:57
+binder 7113:7113 <> n:58
+R7129:7132 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7118:7123 Coq.Lists.List <> Forall ind
+R7127:7128 Top.BudgetTypedCap <> xs:57 var
+R7125:7125 Top.BudgetTypedCap <> P:56 var
+R7133:7138 Coq.Lists.List <> Forall ind
+R7143:7151 Top.BudgetTypedCap <> remove_at def
+R7156:7156 Top.BudgetTypedCap <> n:58 var
+R7153:7154 Top.BudgetTypedCap <> xs:57 var
+R7140:7140 Top.BudgetTypedCap <> P:56 var
+prf 7461:7474 <> sum_remove_two
+binder 7485:7486 <> xs:59
+binder 7488:7488 <> i:60
+binder 7490:7490 <> j:61
+binder 7492:7493 <> vi:62
+binder 7495:7496 <> vj:63
+R7512:7517 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7503:7505 Coq.Init.Peano <> ::nat_scope:x_'<'_x not
+R7502:7502 Top.BudgetTypedCap <> i:60 var
+R7506:7506 Top.BudgetTypedCap <> j:61 var
+R7540:7545 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7530:7532 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R7518:7524 Top.BudgetTypedCap <> nth_opt def
+R7529:7529 Top.BudgetTypedCap <> i:60 var
+R7526:7527 Top.BudgetTypedCap <> xs:59 var
+R7533:7536 Coq.Init.Datatypes <> Some constr
+R7538:7539 Top.BudgetTypedCap <> vi:62 var
+R7568:7573 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R7558:7560 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R7546:7552 Top.BudgetTypedCap <> nth_opt def
+R7557:7557 Top.BudgetTypedCap <> j:61 var
+R7554:7555 Top.BudgetTypedCap <> xs:59 var
+R7561:7564 Coq.Init.Datatypes <> Some constr
+R7566:7567 Top.BudgetTypedCap <> vj:63 var
+R7623:7627 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R7574:7583 Coq.Lists.List <> fold_right def
+R7594:7602 Top.BudgetTypedCap <> remove_at def
+R7621:7621 Top.BudgetTypedCap <> i:60 var
+R7605:7613 Top.BudgetTypedCap <> remove_at def
+R7618:7618 Top.BudgetTypedCap <> j:61 var
+R7615:7616 Top.BudgetTypedCap <> xs:59 var
+R7585:7589 Coq.ZArith.BinInt Z add def
+R7654:7656 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R7649:7651 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R7628:7637 Coq.Lists.List <> fold_right def
+R7647:7648 Top.BudgetTypedCap <> xs:59 var
+R7639:7643 Coq.ZArith.BinInt Z add def
+R7652:7653 Top.BudgetTypedCap <> vi:62 var
+R7657:7658 Top.BudgetTypedCap <> vj:63 var
+R7743:7745 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R7717:7723 Top.BudgetTypedCap <> nth_opt def
+R7726:7734 Top.BudgetTypedCap <> remove_at def
+R7746:7749 Coq.Init.Datatypes <> Some constr
+R7743:7745 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R7717:7723 Top.BudgetTypedCap <> nth_opt def
+R7726:7734 Top.BudgetTypedCap <> remove_at def
+R7746:7749 Coq.Init.Datatypes <> Some constr
+R8048:8060 Top.BudgetTypedCap <> sum_remove_at thm
+R8048:8060 Top.BudgetTypedCap <> sum_remove_at thm
+R8048:8060 Top.BudgetTypedCap <> sum_remove_at thm
+R8085:8097 Top.BudgetTypedCap <> sum_remove_at thm
+R8085:8097 Top.BudgetTypedCap <> sum_remove_at thm
+R8085:8097 Top.BudgetTypedCap <> sum_remove_at thm
+prf 8127:8148 <> forall_remove_at_twice
+binder 8160:8160 <> A:64
+R8169:8172 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8168:8168 Top.BudgetTypedCap <> A:64 var
+binder 8164:8164 <> P:65
+binder 8179:8180 <> xs:66
+binder 8182:8182 <> m:67
+binder 8184:8184 <> n:68
+R8200:8203 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8189:8194 Coq.Lists.List <> Forall ind
+R8198:8199 Top.BudgetTypedCap <> xs:66 var
+R8196:8196 Top.BudgetTypedCap <> P:65 var
+R8204:8209 Coq.Lists.List <> Forall ind
+R8214:8222 Top.BudgetTypedCap <> remove_at def
+R8241:8241 Top.BudgetTypedCap <> n:68 var
+R8225:8233 Top.BudgetTypedCap <> remove_at def
+R8238:8238 Top.BudgetTypedCap <> m:67 var
+R8235:8236 Top.BudgetTypedCap <> xs:66 var
+R8211:8211 Top.BudgetTypedCap <> P:65 var
+R8268:8283 Top.BudgetTypedCap <> forall_remove_at thm
+R8268:8283 Top.BudgetTypedCap <> forall_remove_at thm
+R8292:8307 Top.BudgetTypedCap <> forall_remove_at thm
+R8292:8307 Top.BudgetTypedCap <> forall_remove_at thm
+prf 8547:8560 <> init_invariant
+binder 8571:8573 <> MAX:69
+R8584:8587 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R8577:8580 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x not
+R8581:8583 Top.BudgetTypedCap <> MAX:69 var
+R8588:8596 Top.BudgetTypedCap <> invariant def
+R8598:8600 Top.BudgetTypedCap <> MAX:69 var
+R8603:8606 Top.BudgetTypedCap <> init def
+R8608:8610 Top.BudgetTypedCap <> MAX:69 var
+R8645:8653 Top.BudgetTypedCap <> invariant def
+R8656:8659 Top.BudgetTypedCap <> init def
+R8662:8666 Top.BudgetTypedCap <> total def
+R8669:8676 Top.BudgetTypedCap <> sum_live def
+prf 9268:9281 <> step_invariant
+binder 9292:9294 <> MAX:70
+binder 9296:9296 <> s:71
+binder 9298:9298 <> o:72
+R9318:9321 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R9303:9311 Top.BudgetTypedCap <> invariant def
+R9313:9315 Top.BudgetTypedCap <> MAX:70 var
+R9317:9317 Top.BudgetTypedCap <> s:71 var
+R9322:9330 Top.BudgetTypedCap <> invariant def
+R9332:9334 Top.BudgetTypedCap <> MAX:70 var
+R9337:9340 Top.BudgetTypedCap <> step def
+R9342:9344 Top.BudgetTypedCap <> MAX:70 var
+R9346:9346 Top.BudgetTypedCap <> s:71 var
+R9348:9348 Top.BudgetTypedCap <> o:72 var
+R9458:9466 Top.BudgetTypedCap <> invariant def
+R9469:9473 Top.BudgetTypedCap <> total def
+R9476:9483 Top.BudgetTypedCap <> sum_live def
+R9537:9551 Top.BudgetTypedCap <> sum_live_nonneg thm
+R9537:9551 Top.BudgetTypedCap <> sum_live_nonneg thm
+R9697:9700 Top.BudgetTypedCap <> step def
+R9702:9705 Top.BudgetTypedCap <> live proj
+R9707:9715 Top.BudgetTypedCap <> committed proj
+R9733:9739 Top.BudgetTypedCap <> nth_opt def
+R9798:9802 Top.BudgetTypedCap <> total def
+R9805:9812 Top.BudgetTypedCap <> sum_live def
+R9733:9739 Top.BudgetTypedCap <> nth_opt def
+R9869:9872 Coq.Init.Datatypes <> andb def
+R9890:9894 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R9876:9880 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R9937:9941 Top.BudgetTypedCap <> total def
+R9944:9951 Top.BudgetTypedCap <> sum_live def
+R9869:9872 Coq.Init.Datatypes <> andb def
+R9890:9894 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R9876:9880 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R10004:10021 Coq.Bool.Bool <> andb_true_iff thm
+R10004:10021 Coq.Bool.Bool <> andb_true_iff thm
+R10066:10073 Coq.ZArith.BinInt Z leb_le thm
+R10066:10073 Coq.ZArith.BinInt Z leb_le thm
+R10066:10073 Coq.ZArith.BinInt Z leb_le thm
+R10104:10113 Top.BudgetTypedCap <> forall_nth thm
+R10104:10113 Top.BudgetTypedCap <> forall_nth thm
+R10153:10165 Top.BudgetTypedCap <> sum_remove_at thm
+R10153:10165 Top.BudgetTypedCap <> sum_remove_at thm
+R10197:10205 Top.BudgetTypedCap <> invariant def
+R10208:10212 Top.BudgetTypedCap <> total def
+R10215:10222 Top.BudgetTypedCap <> sum_live def
+R10265:10274 Coq.Lists.List <> fold_right def
+R10285:10293 Top.BudgetTypedCap <> remove_at def
+R10276:10280 Coq.ZArith.BinInt Z add def
+R10346:10348 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R10322:10331 Coq.Lists.List <> fold_right def
+R10333:10337 Coq.ZArith.BinInt Z add def
+R10265:10274 Coq.Lists.List <> fold_right def
+R10285:10293 Top.BudgetTypedCap <> remove_at def
+R10276:10280 Coq.ZArith.BinInt Z add def
+R10346:10348 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R10322:10331 Coq.Lists.List <> fold_right def
+R10333:10337 Coq.ZArith.BinInt Z add def
+R10383:10392 Coq.Lists.List <> fold_right def
+R10394:10398 Coq.ZArith.BinInt Z add def
+R10383:10392 Coq.Lists.List <> fold_right def
+R10394:10398 Coq.ZArith.BinInt Z add def
+R10469:10484 Top.BudgetTypedCap <> forall_remove_at thm
+R10469:10484 Top.BudgetTypedCap <> forall_remove_at thm
+R10569:10572 Top.BudgetTypedCap <> step def
+R10574:10577 Top.BudgetTypedCap <> live proj
+R10579:10587 Top.BudgetTypedCap <> committed proj
+R10605:10611 Top.BudgetTypedCap <> nth_opt def
+R10670:10674 Top.BudgetTypedCap <> total def
+R10677:10684 Top.BudgetTypedCap <> sum_live def
+R10605:10611 Top.BudgetTypedCap <> nth_opt def
+R10741:10744 Coq.Init.Datatypes <> andb def
+R10762:10766 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R10748:10752 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R10809:10813 Top.BudgetTypedCap <> total def
+R10816:10823 Top.BudgetTypedCap <> sum_live def
+R10741:10744 Coq.Init.Datatypes <> andb def
+R10762:10766 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R10748:10752 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R10876:10893 Coq.Bool.Bool <> andb_true_iff thm
+R10876:10893 Coq.Bool.Bool <> andb_true_iff thm
+R10938:10945 Coq.ZArith.BinInt Z leb_le thm
+R10938:10945 Coq.ZArith.BinInt Z leb_le thm
+R10938:10945 Coq.ZArith.BinInt Z leb_le thm
+R10976:10985 Top.BudgetTypedCap <> forall_nth thm
+R10976:10985 Top.BudgetTypedCap <> forall_nth thm
+R11025:11037 Top.BudgetTypedCap <> sum_remove_at thm
+R11025:11037 Top.BudgetTypedCap <> sum_remove_at thm
+R11069:11077 Top.BudgetTypedCap <> invariant def
+R11080:11084 Top.BudgetTypedCap <> total def
+R11087:11094 Top.BudgetTypedCap <> sum_live def
+R11137:11146 Coq.Lists.List <> fold_right def
+R11157:11165 Top.BudgetTypedCap <> remove_at def
+R11148:11152 Coq.ZArith.BinInt Z add def
+R11218:11220 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R11194:11203 Coq.Lists.List <> fold_right def
+R11205:11209 Coq.ZArith.BinInt Z add def
+R11137:11146 Coq.Lists.List <> fold_right def
+R11157:11165 Top.BudgetTypedCap <> remove_at def
+R11148:11152 Coq.ZArith.BinInt Z add def
+R11218:11220 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R11194:11203 Coq.Lists.List <> fold_right def
+R11205:11209 Coq.ZArith.BinInt Z add def
+R11255:11264 Coq.Lists.List <> fold_right def
+R11266:11270 Coq.ZArith.BinInt Z add def
+R11255:11264 Coq.Lists.List <> fold_right def
+R11266:11270 Coq.ZArith.BinInt Z add def
+R11362:11377 Top.BudgetTypedCap <> forall_remove_at thm
+R11362:11377 Top.BudgetTypedCap <> forall_remove_at thm
+R11463:11466 Top.BudgetTypedCap <> step def
+R11468:11471 Top.BudgetTypedCap <> live proj
+R11473:11481 Top.BudgetTypedCap <> committed proj
+R11495:11501 Coq.Arith.PeanoNat Nat eqb def
+R11495:11501 Coq.Arith.PeanoNat Nat eqb def
+R11545:11549 Top.BudgetTypedCap <> total def
+R11552:11559 Top.BudgetTypedCap <> sum_live def
+R11617:11623 Top.BudgetTypedCap <> nth_opt def
+R11682:11686 Top.BudgetTypedCap <> total def
+R11689:11696 Top.BudgetTypedCap <> sum_live def
+R11617:11623 Top.BudgetTypedCap <> nth_opt def
+R11753:11759 Top.BudgetTypedCap <> nth_opt def
+R11818:11822 Top.BudgetTypedCap <> total def
+R11825:11832 Top.BudgetTypedCap <> sum_live def
+R11753:11759 Top.BudgetTypedCap <> nth_opt def
+R11896:11900 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R11891:11893 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R11946:11950 Top.BudgetTypedCap <> total def
+R11953:11960 Top.BudgetTypedCap <> sum_live def
+R11896:11900 Coq.ZArith.BinInt <> ::Z_scope:x_'<=?'_x not
+R11891:11893 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R12013:12020 Coq.ZArith.BinInt Z leb_le thm
+R12013:12020 Coq.ZArith.BinInt Z leb_le thm
+R12041:12051 Coq.Arith.PeanoNat Nat eqb_neq thm
+R12041:12051 Coq.Arith.PeanoNat Nat eqb_neq thm
+R12077:12086 Top.BudgetTypedCap <> forall_nth thm
+R12077:12086 Top.BudgetTypedCap <> forall_nth thm
+R12128:12137 Top.BudgetTypedCap <> forall_nth thm
+R12128:12137 Top.BudgetTypedCap <> forall_nth thm
+R12261:12269 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R12193:12202 Coq.Lists.List <> fold_right def
+R12213:12221 Top.BudgetTypedCap <> remove_at def
+R12252:12254 Coq.Init.Peano <> min abbrev
+R12224:12232 Top.BudgetTypedCap <> remove_at def
+R12241:12243 Coq.Init.Peano <> max abbrev
+R12204:12208 Coq.ZArith.BinInt Z add def
+R12299:12301 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12294:12296 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12270:12279 Coq.Lists.List <> fold_right def
+R12281:12285 Coq.ZArith.BinInt Z add def
+R12261:12269 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R12193:12202 Coq.Lists.List <> fold_right def
+R12213:12221 Top.BudgetTypedCap <> remove_at def
+R12252:12254 Coq.Init.Peano <> min abbrev
+R12224:12232 Top.BudgetTypedCap <> remove_at def
+R12241:12243 Coq.Init.Peano <> max abbrev
+R12204:12208 Coq.ZArith.BinInt Z add def
+R12299:12301 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12294:12296 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12270:12279 Coq.Lists.List <> fold_right def
+R12281:12285 Coq.ZArith.BinInt Z add def
+R12323:12337 Coq.Arith.PeanoNat Nat lt_ge_cases thm
+R12323:12337 Coq.Arith.PeanoNat Nat lt_ge_cases thm
+R12377:12385 Coq.Arith.PeanoNat Nat max_r thm
+R12392:12405 Coq.Arith.PeanoNat Nat lt_le_incl thm
+R12377:12385 Coq.Arith.PeanoNat Nat max_r thm
+R12392:12405 Coq.Arith.PeanoNat Nat lt_le_incl thm
+R12377:12385 Coq.Arith.PeanoNat Nat max_r thm
+R12392:12405 Coq.Arith.PeanoNat Nat lt_le_incl thm
+R12435:12443 Coq.Arith.PeanoNat Nat min_l thm
+R12450:12463 Coq.Arith.PeanoNat Nat lt_le_incl thm
+R12435:12443 Coq.Arith.PeanoNat Nat min_l thm
+R12450:12463 Coq.Arith.PeanoNat Nat lt_le_incl thm
+R12435:12443 Coq.Arith.PeanoNat Nat min_l thm
+R12450:12463 Coq.Arith.PeanoNat Nat lt_le_incl thm
+R12490:12503 Top.BudgetTypedCap <> sum_remove_two thm
+R12490:12503 Top.BudgetTypedCap <> sum_remove_two thm
+R12565:12567 Coq.Init.Peano <> ::nat_scope:x_'<'_x not
+R12565:12567 Coq.Init.Peano <> ::nat_scope:x_'<'_x not
+R12601:12609 Coq.Arith.PeanoNat Nat max_l thm
+R12601:12609 Coq.Arith.PeanoNat Nat max_l thm
+R12601:12609 Coq.Arith.PeanoNat Nat max_l thm
+R12638:12646 Coq.Arith.PeanoNat Nat min_r thm
+R12638:12646 Coq.Arith.PeanoNat Nat min_r thm
+R12638:12646 Coq.Arith.PeanoNat Nat min_r thm
+R12678:12691 Top.BudgetTypedCap <> sum_remove_two thm
+R12678:12691 Top.BudgetTypedCap <> sum_remove_two thm
+R12950:12952 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12945:12947 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12921:12930 Coq.Lists.List <> fold_right def
+R12932:12936 Coq.ZArith.BinInt Z add def
+R12950:12952 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12945:12947 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R12921:12930 Coq.Lists.List <> fold_right def
+R12932:12936 Coq.ZArith.BinInt Z add def
+R13007:13015 Top.BudgetTypedCap <> invariant def
+R13018:13022 Top.BudgetTypedCap <> total def
+R13025:13032 Top.BudgetTypedCap <> sum_live def
+R13075:13084 Coq.Lists.List <> fold_right def
+R13095:13103 Top.BudgetTypedCap <> remove_at def
+R13143:13154 Coq.Init.Nat <> min def
+R13106:13114 Top.BudgetTypedCap <> remove_at def
+R13123:13134 Coq.Init.Nat <> max def
+R13086:13090 Coq.ZArith.BinInt Z add def
+R13207:13209 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13202:13204 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13178:13187 Coq.Lists.List <> fold_right def
+R13189:13193 Coq.ZArith.BinInt Z add def
+R13075:13084 Coq.Lists.List <> fold_right def
+R13095:13103 Top.BudgetTypedCap <> remove_at def
+R13143:13154 Coq.Init.Nat <> min def
+R13106:13114 Top.BudgetTypedCap <> remove_at def
+R13123:13134 Coq.Init.Nat <> max def
+R13086:13090 Coq.ZArith.BinInt Z add def
+R13207:13209 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13202:13204 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13178:13187 Coq.Lists.List <> fold_right def
+R13189:13193 Coq.ZArith.BinInt Z add def
+R13245:13254 Coq.Lists.List <> fold_right def
+R13256:13260 Coq.ZArith.BinInt Z add def
+R13245:13254 Coq.Lists.List <> fold_right def
+R13256:13260 Coq.ZArith.BinInt Z add def
+R13334:13336 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R13325:13327 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13309:13312 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13324:13324 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13304:13306 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13319:13321 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13314:13316 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13338:13340 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13334:13336 Coq.Init.Logic <> ::type_scope:x_'='_x not
+R13325:13327 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13309:13312 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13324:13324 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13304:13306 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13319:13321 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13314:13316 Coq.ZArith.BinInt <> ::Z_scope:x_'-'_x not
+R13338:13340 Coq.ZArith.BinInt <> ::Z_scope:x_'+'_x not
+R13462:13483 Top.BudgetTypedCap <> forall_remove_at_twice thm
+R13462:13483 Top.BudgetTypedCap <> forall_remove_at_twice thm
+prf 13724:13742 <> reachable_invariant
+binder 13753:13755 <> MAX:73
+binder 13757:13757 <> s:74
+R13770:13773 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R13763:13766 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x not
+R13767:13769 Top.BudgetTypedCap <> MAX:73 var
+R13789:13792 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R13774:13782 Top.BudgetTypedCap <> reachable ind
+R13784:13786 Top.BudgetTypedCap <> MAX:73 var
+R13788:13788 Top.BudgetTypedCap <> s:74 var
+R13793:13801 Top.BudgetTypedCap <> invariant def
+R13803:13805 Top.BudgetTypedCap <> MAX:73 var
+R13807:13807 Top.BudgetTypedCap <> s:74 var
+R13863:13876 Top.BudgetTypedCap <> init_invariant thm
+R13863:13876 Top.BudgetTypedCap <> init_invariant thm
+R13901:13914 Top.BudgetTypedCap <> step_invariant thm
+R13901:13914 Top.BudgetTypedCap <> step_invariant thm
+prf 14156:14174 <> typed_cap_soundness
+R14194:14195 Top.BudgetTypedCap <> uc def
+binder 14188:14190 <> MAX:75
+R14203:14207 Top.BudgetTypedCap <> state rec
+binder 14199:14199 <> s:76
+R14232:14239 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R14216:14219 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x_'<'_x not
+R14223:14225 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x_'<'_x not
+R14220:14222 Top.BudgetTypedCap <> MAX:75 var
+R14220:14222 Top.BudgetTypedCap <> MAX:75 var
+R14227:14229 Coq.ZArith.BinInt <> ::Z_scope:x_'^'_x not
+R14255:14262 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R14240:14248 Top.BudgetTypedCap <> reachable ind
+R14250:14252 Top.BudgetTypedCap <> MAX:75 var
+R14254:14254 Top.BudgetTypedCap <> s:76 var
+R14274:14277 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x not
+R14263:14271 Top.BudgetTypedCap <> committed proj
+R14273:14273 Top.BudgetTypedCap <> s:76 var
+R14278:14280 Top.BudgetTypedCap <> MAX:75 var
+R14334:14352 Top.BudgetTypedCap <> reachable_invariant thm
+R14334:14352 Top.BudgetTypedCap <> reachable_invariant thm
+R14397:14411 Top.BudgetTypedCap <> sum_live_nonneg thm
+R14397:14411 Top.BudgetTypedCap <> sum_live_nonneg thm
+R14436:14440 Top.BudgetTypedCap <> total def
+R14443:14450 Top.BudgetTypedCap <> sum_live def
+prf 14691:14712 <> typed_cap_conservation
+R14732:14733 Top.BudgetTypedCap <> uc def
+binder 14726:14728 <> MAX:77
+R14741:14745 Top.BudgetTypedCap <> state rec
+binder 14737:14737 <> s:78
+R14770:14777 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R14754:14757 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x_'<'_x not
+R14761:14763 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x_'<'_x not
+R14758:14760 Top.BudgetTypedCap <> MAX:77 var
+R14758:14760 Top.BudgetTypedCap <> MAX:77 var
+R14765:14767 Coq.ZArith.BinInt <> ::Z_scope:x_'^'_x not
+R14793:14800 Coq.Init.Logic <> ::type_scope:x_'->'_x not
+R14778:14786 Top.BudgetTypedCap <> reachable ind
+R14788:14790 Top.BudgetTypedCap <> MAX:77 var
+R14792:14792 Top.BudgetTypedCap <> s:78 var
+R14808:14811 Coq.ZArith.BinInt <> ::Z_scope:x_'<='_x not
+R14801:14805 Top.BudgetTypedCap <> total def
+R14807:14807 Top.BudgetTypedCap <> s:78 var
+R14812:14814 Top.BudgetTypedCap <> MAX:77 var
+R14868:14886 Top.BudgetTypedCap <> reachable_invariant thm
+R14868:14886 Top.BudgetTypedCap <> reachable_invariant thm
