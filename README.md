@@ -1,282 +1,127 @@
-# Token Budgets
+# token-budgets
 
-> An affine-resource discipline for LLM cost caps in Rust.
-> Type-level integrity of resource accounting combined with runtime
-> cap arithmetic. The `Budget` type is non-cloneable and its spend
-> operation consumes it by value, producing a `Receipt` that must be
-> resolved into either a confirmed refund or a forfeit.
+Compile-time affine typing for LLM cost caps in Rust. The main library crate.
 
-[![TLAPS](https://img.shields.io/badge/TLAPS-497_obligations-brightgreen)](https://github.com/sajjadanwar0/token-budgets-formals)
-[![TLC](https://img.shields.io/badge/TLC-252_states-brightgreen)](https://github.com/sajjadanwar0/token-budgets-formals)
-[![Dafny](https://img.shields.io/badge/Dafny-23_verified-brightgreen)](https://github.com/sajjadanwar0/token-budgets-formals)
-[![Coq](https://img.shields.io/badge/Coq-0_Admitted-brightgreen)](https://github.com/sajjadanwar0/token-budgets-formals)
-[![Verus](https://img.shields.io/badge/Verus-66_theorems-brightgreen)](https://github.com/sajjadanwar0/token-budgets-formals)
-[![Catalog](https://img.shields.io/badge/catalog-167_failures_/_23_frameworks-blue)](#catalog-of-real-world-failures)
-[![License](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-blue)](LICENSE-MIT)
+This is the implementation accompanying the paper *Token Budgets: A 4-Tier Formal Verification of Compile-Time Affine Typing for LLM Cost Caps*, currently under review at *Empirical Software Engineering*.
 
-This is the main Rust library of the **Token Budgets** project, an
-EMSE-submission artifact. The discipline addresses a documented class
-of agent failures where the absence of a first-class cost-bounding
-primitive leads to runaway LLM spend (see
-[catalog](#catalog-of-real-world-failures)).
+## What this crate gives you
 
-The full artifact is a 5-repo set; this is the entry point. See
-[Related repositories](#related-repositories) below for the others.
-
-## What it provides
-
-A small affine-typed API for **financial** cost caps (denominated in
-nano-cents — 1 nc = $0.00000001):
+A `Budget<T>` type that you cannot duplicate, cannot use twice, and cannot exceed:
 
 ```rust
-use token_budgets::{Budget, ByteLength};
+use token_budgets::{Budget, BudgetError};
 
-// Compile-time cap. Const-generic guarantees A2 (no u64 overflow on spend).
-const CAP: u64 = 1_000_000_000;  // $10 in nano-cents
-
-let budget = Budget::<CAP>::new(CAP)?;
-
-// The affine consume-by-value spend operation
-let (after_reserve, receipt) = budget.spend_with_receipt(50_000)?;
-
-// Some time later, after a provider call returns actual usage:
-let refund = receipt.confirm(actual_cost_nc)?;
-let final_budget = refund.apply_to(after_reserve)?;
+let b = Budget::new(1000)?;          // construct with cap of 1000 tokens
+let (lhs, rhs) = b.split(400)?;      // splits into two budgets summing to 1000
+lhs.spend(350)?;                      // consume 350, returns Receipt
+// lhs.spend(100)?;                   // COMPILE ERROR: lhs was moved
 ```
 
-The compiler enforces that **each `Budget` is consumed exactly once**
-per operation and **each `Receipt` is resolved exactly once** (either
-`confirm` or `forfeit`, not both, never neither).
+The type system enforces that:
 
-## Why a new primitive
+- A `Budget` cannot be cloned (no `Clone` impl). Once consumed, it's gone.
+- Sub-budgets sum to ≤ the parent (`split` and `merge` are conservation laws).
+- A spent budget yields a `Receipt`, not a re-usable balance.
+- A pool with reservations cannot oversubscribe (`Pool` typestate machine).
 
-The catalog documents **167 production incidents across 23 frameworks
-and 18 ecosystems**, including:
+This sits one layer below `tokio` and one layer above your model client (Anthropic, OpenAI, Mistral, etc.).
 
-- Compaction-loop runaway ($235 in 4 days, claude-code #9579)
-- Tool-call hard-cliffs that fire after useful work was already done
-  (pydantic-ai #4359: "kill switch... the entire run dies")
-- Multi-tenant fanout amplification (CrewAI #2655: >1M tokens
-  re-embedded per crew run)
-- Provider-asymmetric cache double-counting (pydantic-ai #4364)
-- Tool-call argument truncation when output tokens hit max
-  (pydantic-ai #3118, Anthropic-only)
+## Quick start
 
-Token Budgets addresses these structurally: each call goes through a
-receipt/refund cycle that reconciles reserved vs actual usage and
-enforces the cap as a type-level invariant.
-
-## API surface
-
-### Core types
-
-| Type | Purpose | Notes |
-|---|---|---|
-| `Budget<const MAX: u64>` | Affine financial cap | Const-generic MAX enforces A2 (overflow-free) |
-| `Receipt<const MAX: u64>` | In-flight reservation | Must be `confirm`ed or `forfeit`ed exactly once |
-| `Refund<const MAX: u64>` | Confirmed-but-unrefunded slack | Applied back to a `Budget` via `apply_to` |
-| `StreamingReceipt<const MAX: u64>` | Per-chunk refund for streaming | Interim chunks via `confirm_chunk`, finalize via `close` |
-| `BudgetPool` | Multi-tenant sharded budget | For pool-of-budgets workloads |
-| `Reservation` | Pool-side in-flight reservation | Drop-safe with auto-refund on unwind |
-| `CapAuthority` | Sealed-cap binding | Operator-trust-boundary enforcement via `seal_at_startup()` |
-| `ReasoningProvider` | Enum for reasoning-model accounting | Used by `spend_with_reasoning` for o3-mini, DeepSeek-R1, etc. |
-
-### Budget spend variants
-
-```rust
-// 1. Simple spend (consumes Budget, returns new Budget)
-budget.spend(amount) -> Result<Self, BudgetError>
-
-// 2. Spend with receipt (the affine reserve→confirm cycle)
-budget.spend_with_receipt(reserved) -> Result<(Self, Receipt<MAX>), BudgetError>
-
-// 3. Streaming spend (per-chunk refund)
-budget.spend_streaming(reserved) -> Result<(Self, StreamingReceipt<MAX>), BudgetError>
-
-// 4. Reasoning-aware spend (separate invisible reasoning tokens)
-budget.spend_with_reasoning(visible_estimate, provider) -> Result<(Self, Receipt<MAX>), BudgetError>
-
-// Plus pool/split/merge:
-budget.split(amount) -> Result<(Self, Self), BudgetError>
-budget.merge(other) -> Result<Self, BudgetError>
-```
-
-### Estimators
-
-| Estimator | Source | When to use |
-|---|---|---|
-| `ByteLength` | Always available | Sound upper bound (A1: byte-length dominance) |
-| `Tiktoken` | Feature `tiktoken` | Tighter reservation for OpenAI-tokenizer models |
-
-Activate the tiktoken estimator:
 ```toml
 [dependencies]
-token-budgets = { version = "0.5", features = ["tiktoken"] }
+token-budgets = "0.5"
 ```
-
-## Worked example
 
 ```rust
-use token_budgets::{Budget, ByteLength, TokenEstimator};
+use token_budgets::{Budget, AnthropicEstimator, TokenEstimator};
 
-const CAP: u64 = 1_000_000_000;  // $10 cap
-
-fn budget_aware_call(
-  budget: Budget<CAP>,
-  prompt: &str,
-  input_price_nc: u64,
-  output_price_nc: u64,
-  max_tokens: u32,
-) -> Result<Budget<CAP>, Box<dyn std::error::Error>> {
-  // 1. Estimate (sound upper bound via byte-length / A1)
-  let est_in_tokens = ByteLength.estimate(prompt);
-  let reservation_nc = est_in_tokens * input_price_nc
-          + (max_tokens as u64) * output_price_nc;
-
-  // 2. Reserve (consumes budget by value)
-  let (after_reserve, receipt) = budget.spend_with_receipt(reservation_nc)?;
-
-  // 3. Perform the actual provider call (placeholder)
-  let actual_in_tokens: u64 = 0;   // <- from provider response
-  let actual_out_tokens: u64 = 0;  // <- from provider response
-  let actual_nc = actual_in_tokens * input_price_nc
-          + actual_out_tokens * output_price_nc;
-
-  // 4. Confirm receipt (A1 check happens here; A1 violation fails noisily)
-  let refund = receipt.confirm(actual_nc)?;
-  let final_budget = refund.apply_to(after_reserve)?;
-  Ok(final_budget)
-}
+let budget = Budget::new(5000)?;
+let estimator = AnthropicEstimator::default();      // 2.0× margin (load-bearing; §5.22)
+let estimate = estimator.estimate(&prompt);
+let (for_call, remaining) = budget.split(estimate)?;
+let response = call_model(prompt, &for_call).await?;
+let receipt = for_call.spend(response.tokens_used)?;
 ```
 
-For end-to-end working examples with mock and real providers, see
-[`rig-budget`](https://github.com/sajjadanwar0/rig-budget) and
-[`token-budgets-experiments`](https://github.com/sajjadanwar0/token-budgets-experiments).
+## Reproducibility (paper Table 21 / Table 30)
 
-## Build and test
+This repository ships `reproduce.sh`, which clones the 5 companion repositories and runs every reproducible check from the paper end-to-end. From a clean workspace:
 
 ```bash
-cargo build --release
-cargo test
-cargo bench           # Criterion microbenchmarks (success/failure path)
+git clone https://github.com/sajjadanwar0/token-budgets
+cd token-budgets
+WORKDIR=/tmp/tb-reproduce bash reproduce.sh 2>&1 | tee reproduction.log
 ```
 
-Criterion microbenchmarks in `benches/spend_bench.rs` measure
-`Budget::spend` on success and failure paths with proper `black_box`
-discipline.
+Expected output: **33 PASS / 0 FAIL / 1 SKIP** (live-API sweeps are opt-in via `--live`). The single SKIP is the live-API replay (~$1 to run; pass `--live` with `OPENAI_API_KEY` and `ANTHROPIC_API_KEY` set).
 
-## Catalog of real-world failures
+Optional flags:
 
-`data/budget-archaeology.csv` contains **167 documented incidents
-across 23 frameworks and 18 ecosystems**, spanning 2023–2026. Each
-row carries: `issue_id`, `framework`, `date`, `short_url`, `title`,
-`prevented_at_compile_time`, `user_dollar_loss`, and free-text
-`notes` with verbatim maintainer/reporter quotes.
+```
+--skip-{verus,coq,tla,dafny,bench,loom,irr,python,experiments}
+--rerun-loom           # attempt fresh Loom rebuild (see Known Issues)
+--live                 # run live-API multi-runtime sweep
+```
 
-The codebook at `data/budget-archaeology-codebook.md` defines the
-8 mechanism clusters and 4 amplification levels used in the paper.
+## Microbenchmarks (Table 21)
 
-### Honest scope on the catalog
+```bash
+cargo bench
+```
 
-- **Inter-rater reliability is substantial.** Independent two-human
-  inter-rater agreement on a stratified 30-row sample: **Cohen's κ =
-  0.699** (95% bootstrap CI [0.458, 0.896]; 80% observed agreement).
-  Annotated by Sajjad Khan and Zahid Hussain (Mindgigs) using the v1.0
-  codebook. Per-class agreement ranges from 50% (`maintainer_framing`)
-  to 100% (`feature_request`); the `maintainer_framing` category is
-  the codebook's known weak spot and a target for refinement in v2.0.
-  Six disagreements out of 30 rows (CCDE-001, ATGN-018, DSPY-003,
-  SMAG-004, CRAI-009, PCLP-001) are adjudicated in
-  `data/irr-disagreements.md`.
-- **The 8 mechanism clusters are post-hoc analytic.** They emerged
-  from the data rather than being independently derived.
-- **The catalog is a convenience sample** of GitHub issues found
-  via systematic search; it is not a probability sample of all
-  agent-spend incidents.
+Operations on a 2026 Apple M3, release build, criterion 0.8.2:
 
-These limitations are discussed in paper §V and the codebook.
+| Operation             | Median time | 95% CI               |
+|-----------------------|-------------|----------------------|
+| `Budget::new`         | 687 ps      | [686, 688] ps        |
+| `Budget::spend(ok)`   | 1.13 ns     | [1.12, 1.13] ns      |
+| `Budget::spend(fail)` | 1.13 ns     | [1.12, 1.13] ns      |
+| `Budget::merge`       | 1.38 ns     | [1.38, 1.38] ns      |
+| `Budget::split`       | 4.75 ns     | [4.74, 4.75] ns      |
 
-## Verification
+These have been reproduced across 8 independent runs; the variance between runs is within Criterion's ±5% noise band.
 
-The discipline's cap-soundness theorem is mechanized across
-**five independent provers**, all reproducible from
-[`token-budgets-formals`](https://github.com/sajjadanwar0/token-budgets-formals):
+## Loom interleaving evidence
 
-| Tier | Tool | Verified |
-|---|---|---|
-| 1 | TLAPS | 497 obligations proved (Zenon+Isabelle, no SMT) |
-| 2 | TLC | 252 distinct reachable states at B₀=5 |
-| 3 | Coq | 0 Admitted, 0 axioms in `budget.v` |
-| 4 | Dafny | 23 verified, 0 errors |
-| 5 | Verus | 66 theorems (42 sequential + 11 pool + 13 concurrent) |
+The `tests/loom_concurrent.rs` test exercises the `Pool` typestate under loom's exhaustive scheduler. Shipped logs in `loom_run*.log` document 5,957 total interleavings explored across four sweeps with zero cap violations.
 
-Tiers 1-4 verify the abstract Budget state machine. Tier 5 (Verus)
-verifies the actual Rust source code.
+To re-run: `RUSTFLAGS="--cfg loom" cargo test --test loom_concurrent --release`. The current `Cargo.toml` makes `tokio` a `cfg(not(loom))` dependency to work around a tokio-1.52 + loom-0.7 feature-gate regression in tokio's `task/local.rs`. Without that gating, tokio is pulled into the loom build and fails to compile due to an unrelated tokio-internal issue.
 
-## Honest scope on the discipline itself
+## Companion repositories
 
-What this discipline **does** provide:
-- Type-level integrity of resource accounting (compiler-enforced
-  affine consume-by-value)
-- Runtime cap arithmetic with overflow-safe checked ops
-- Receipt-cycle reconciliation between reserved and actual usage
-- Mechanically verified cap-soundness across five independent provers
+- [token-budgets-formals](https://github.com/sajjadanwar0/token-budgets-formals) — 4-tier formal verification (Verus 66 obligations, Coq, TLA+, Dafny) and the IRR study (codebook, rater brief, blinded coding sheet, completed annotations, κ = 0.832 on N = 109).
+- [token-budgets-experiments](https://github.com/sajjadanwar0/token-budgets-experiments) — multi-runtime evaluation harness, fair-baseline corpus, refund-live results, A1 calibration, Conjecture 1 stress sweep.
+- [token-budgets-baseline](https://github.com/sajjadanwar0/token-budgets-baseline) — fair-baseline candidate corpus.
+- [token-budgets-python](https://github.com/sajjadanwar0/token-budgets-python) — Python port with LANG-001 reproductions.
+- [token-budgets-extensions](https://github.com/sajjadanwar0/token-budgets-extensions) — adaptive estimator and Verus skeleton for extensions.
 
-What this discipline does **NOT** provide:
-- **A1 (byte-length dominance)** is empirically supported but the
-  fully-mechanized proof for an arbitrary BPE tokenizer construction
-  is open work. Informal justification is in paper §IV-B.
-- **A3 (provider truthfulness)** is an external assumption. No
-  client-side discipline can prevent a malicious provider from
-  misreporting usage.
-- **Conjecture 1: operational refinement to running Tokio**
-  is open work. Partial mechanization is in
-  [`token-budgets-formals/coq/BudgetTraceRefinement{,Pure}.v`](https://github.com/sajjadanwar0/token-budgets-formals/tree/master/coq)
-  and [`token-budgets-extensions/verus-skeleton/`](https://github.com/sajjadanwar0/token-budgets-extensions/tree/master/verus-skeleton).
+## Known issues
 
-The empirical validation in
-[`token-budgets-experiments`](https://github.com/sajjadanwar0/token-budgets-experiments)
-substitutes for the missing refinement at the EMSE level but does
-not subsume it. 5,424 live API row-events observed zero
-cap-soundness violations across the corpus, but this is
-observational evidence, not proof.
+These are acknowledged in the paper, not pretended away:
 
-## Related repositories
+- **Conjecture 1** (operational refinement to the running Tokio binary) is open. The abstract-trace cap-soundness theorem is mechanized in Verus (66 obligations, 0 errors).
+- **Assumption A1** (UTF-8 byte-length dominance) is calibrated with a 2.0× margin, not formally proven. The margin is load-bearing — at margin 1.0, A1 holds only 1/3 of cells; at margin 2.0, A1 holds 30/30. Mechanized proof over a defined class of BPE tokenizers is identified as future work (§5.22).
+- **Loom fresh rebuild** is blocked by a tokio-1.52 + loom-0.7 feature-gate incompatibility in tokio's `task/local.rs`. The shipped `loom_run*.log` files are the authoritative artifact for the 5,957-interleavings claim.
 
-| Repository | What it contains |
-|---|---|
-| [`token-budgets`](https://github.com/sajjadanwar0/token-budgets) | This — the main affine-API library + 167-entry catalog |
-| [`token-budgets-extensions`](https://github.com/sajjadanwar0/token-budgets-extensions) | Adaptive estimator + Verus Conjecture-1 skeleton (open) |
-| [`token-budgets-formals`](https://github.com/sajjadanwar0/token-budgets-formals) | Five-tier mechanized verification: TLAPS, TLC, Coq, Dafny, Verus |
-| [`token-budgets-experiments`](https://github.com/sajjadanwar0/token-budgets-experiments) | Empirical validation: 5,424 live API row-events, sweeps, governor-crate comparison |
-| [`rig-budget`](https://github.com/sajjadanwar0/rig-budget) | Integration helper threading the discipline through the `rig` LLM framework |
-
-## Paper
+## Citation
 
 ```bibtex
-@article{khan-token-budgets-2026,
-  author  = {Khan, Sajjad},
-  title   = {Token Budgets: An Affine-Resource Discipline for LLM Cost Caps in Rust},
-  journal = {arXiv preprint arXiv:TBD},
-  year    = {2026}
+@unpublished{khan2026tokenbudgets,
+  author       = {Khan, Sajjad},
+  title        = {Token Budgets: A 4-Tier Formal Verification of Compile-Time Affine
+                  Typing for LLM Cost Caps, with a 109-Case Empirical Catalog and
+                  6-Runtime Production-Tier Evaluation},
+  year         = {2026},
+  note         = {Under review at Empirical Software Engineering. Reproduction
+                  artifact at \url{https://github.com/sajjadanwar0/token-budgets}.}
 }
 ```
-
-Sections of the paper that touch this crate directly:
-- §III: The Budget/Receipt/Refund affine API (this crate's `src/lib.rs`)
-- §IV-B: Assumption A1 (UTF-8 byte-length dominance) — basis for `ByteLength` estimator
-- §IV-D: Typed-capability formal foundation + five-tier verification
-- §V: Decision framework + the 167-entry catalog
-- §VII: Open work (Conjecture 1, A1 mechanization)
 
 ## License
 
-Dual MIT/Apache-2.0. See `LICENSE-MIT` and `LICENSE-APACHE`.
+[Add license. Apache-2.0 OR MIT recommended for Rust crates.]
 
-## Contributing
+## Contact
 
-Single-author repository for a paper artifact; not currently
-accepting external contributions during the review period. After
-acceptance/publication, the contribution policy will be revisited.
-
-Issues and discussion are welcome.
+Sajjad Khan — [email] — [https://sajjadanwar.io](https://sajjadanwar.io)
