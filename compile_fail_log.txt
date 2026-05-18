@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.10s
+     Running tests/compile_fail.rs (target/debug/deps/compile_fail-3edf75617d977794)
+
+running 1 test
+    Checking token-budgets-tests v0.0.0 (/home/neo/RustroverProjects/token-budgets/target/tests/trybuild/token-budgets)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.13s
+
+
+test [0m[1mtests/compile_fail/borrow_after_split.rs[0m ... [0m[32mok
+[0mtest [0m[1mtests/compile_fail/budget_in_rc.rs[0m ... [0m[32mok
+[0mtest [0m[1mtests/compile_fail/double_capture.rs[0m ... [0m[32mok
+[0mtest [0m[1mtests/compile_fail/spend_through_shared_ref.rs[0m ... [0m[32mok
+[0m
+
+test compile_fail_tests ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+

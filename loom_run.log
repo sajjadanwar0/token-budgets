@@ -1,0 +1,15 @@
+   Compiling token-budgets v0.5.0 (/home/neo/RustroverProjects/token-budgets)
+    Finished `release` profile [optimized] target(s) in 1.02s
+     Running tests/loom_concurrent.rs (target-loom/release/deps/loom_concurrent-3ed69fa205b5f19a)
+
+running 4 tests
+test sanity_test_binary_is_wired_up ... ok
+LOOM_RESULT loom_cap_respecting_2threads_2spends: 176 interleavings explored
+test loom_tests::loom_cap_respecting_2threads_2spends ... ok
+LOOM_RESULT loom_cap_respecting_2threads_boundary: 207 interleavings explored
+test loom_tests::loom_cap_respecting_2threads_boundary ... ok
+LOOM_RESULT loom_cap_respecting_3threads_3spends: 4704 interleavings explored
+test loom_tests::loom_cap_respecting_3threads_3spends ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.54s
+

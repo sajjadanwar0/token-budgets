@@ -1,0 +1,83 @@
+   Compiling rustversion v1.0.22
+   Compiling once_cell v1.21.4
+   Compiling pin-project-lite v0.2.17
+   Compiling log v0.4.29
+   Compiling regex-automata v0.4.14
+   Compiling lazy_static v1.5.0
+   Compiling thread_local v1.1.9
+   Compiling nu-ansi-term v0.50.3
+   Compiling winnow v1.0.3
+   Compiling smallvec v1.15.1
+   Compiling target-triple v1.0.0
+   Compiling toml_datetime v1.1.1+spec-1.1.0
+   Compiling serde_spanned v1.1.1
+   Compiling tokio-macros v2.7.0
+   Compiling scoped-tls v1.0.1
+   Compiling toml_writer v1.1.1+spec-1.1.0
+   Compiling sharded-slab v0.1.7
+   Compiling termcolor v1.4.1
+   Compiling glob v0.3.3
+   Compiling tracing-core v0.1.36
+   Compiling toml_parser v1.1.2+spec-1.1.0
+   Compiling tokio v1.52.3
+   Compiling tracing v0.1.44
+   Compiling tracing-log v0.2.0
+   Compiling generator v0.8.8
+   Compiling toml v1.1.2+spec-1.1.0
+   Compiling trybuild v1.0.116
+   Compiling matchers v0.2.0
+   Compiling regex v1.12.3
+   Compiling tracing-subscriber v0.3.23
+   Compiling criterion v0.8.2
+   Compiling loom v0.7.2
+   Compiling token-budgets v0.5.0 (/home/neo/RustroverProjects/token-budgets)
+    Finished `bench` profile [optimized] target(s) in 11.13s
+     Running benches/spend_bench.rs (target/release/deps/spend_bench-a13269ef055bc58a)
+Gnuplot not found, using plotters backend
+Benchmarking spend_success
+Benchmarking spend_success: Warming up for 3.0000 s
+Benchmarking spend_success: Collecting 100 samples in estimated 5.0000 s (4.4B iterations)
+Benchmarking spend_success: Analyzing
+spend_success           time:   [1.1359 ns 1.1388 ns 1.1423 ns]
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) high mild
+  3 (3.00%) high severe
+
+Benchmarking spend_failure
+Benchmarking spend_failure: Warming up for 3.0000 s
+Benchmarking spend_failure: Collecting 100 samples in estimated 5.0000 s (4.3B iterations)
+Benchmarking spend_failure: Analyzing
+spend_failure           time:   [1.1527 ns 1.1561 ns 1.1598 ns]
+Found 5 outliers among 100 measurements (5.00%)
+  4 (4.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking new
+Benchmarking new: Warming up for 3.0000 s
+Benchmarking new: Collecting 100 samples in estimated 5.0000 s (7.2B iterations)
+Benchmarking new: Analyzing
+new                     time:   [690.72 ps 692.19 ps 693.77 ps]
+Found 13 outliers among 100 measurements (13.00%)
+  3 (3.00%) low mild
+  6 (6.00%) high mild
+  4 (4.00%) high severe
+
+Benchmarking merge
+Benchmarking merge: Warming up for 3.0000 s
+Benchmarking merge: Collecting 100 samples in estimated 5.0000 s (3.6B iterations)
+Benchmarking merge: Analyzing
+merge                   time:   [1.4180 ns 1.4204 ns 1.4230 ns]
+Found 11 outliers among 100 measurements (11.00%)
+  3 (3.00%) low mild
+  5 (5.00%) high mild
+  3 (3.00%) high severe
+
+Benchmarking split
+Benchmarking split: Warming up for 3.0000 s
+Benchmarking split: Collecting 100 samples in estimated 5.0000 s (1.0B iterations)
+Benchmarking split: Analyzing
+split                   time:   [4.8177 ns 4.8314 ns 4.8461 ns]
+Found 9 outliers among 100 measurements (9.00%)
+  3 (3.00%) high mild
+  6 (6.00%) high severe
+
