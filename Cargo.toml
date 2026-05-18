@@ -6,17 +6,20 @@ edition     = "2024"
 [dependencies]
 tiktoken-rs = { version = "0.11.0", optional = true }
 anyhow      = "1"
-loom = "0.7.2"
+
+# Mutually exclusive: tokio under non-loom builds, loom under loom builds.
+# This works around tokio-1.52's cfg(loom) regression where tokio's own
+# task/local.rs imports AtomicWaker unconditionally despite AtomicWaker
+# being gated cfg(not(loom)).
+[target.'cfg(not(loom))'.dependencies]
 tokio = { version = "1", features = ["rt", "macros"] }
 
+[target.'cfg(loom)'.dependencies]
+loom = "0.7.2"
 
 [dev-dependencies]
 criterion   = "0.8.2"
-trybuild = "1.0"
-
-
-[target.'cfg(loom)'.dependencies]
-loom = "0.7"
+trybuild    = "1.0"
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(loom)'] }
