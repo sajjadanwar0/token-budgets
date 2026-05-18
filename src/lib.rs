@@ -12,7 +12,11 @@
 //! - ReasoningProvider for o1/DeepSeek-R1 hidden-token handling
 
 pub mod estimator;
-pub use estimator::{TokenEstimator, ByteLength};
+pub mod pool_typestate;
+pub use pool_typestate::{ResolvedReceipt, ReservationReceipt};
+
+pub use crate::estimator::{AnthropicEstimator, ByteLength, TokenEstimator};
+
 
 #[cfg(feature = "tiktoken")]
 pub use estimator::Tiktoken;
