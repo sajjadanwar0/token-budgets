@@ -27,6 +27,12 @@ unexpected_cfgs = { level = "warn", check-cfg = ['cfg(loom)'] }
 [features]
 default = []
 tiktoken = ["dep:tiktoken-rs"]
+# system-authority: gates BudgetMint::take_authority(). Enable in your
+# top-level binary's Cargo.toml ONLY. Library crates should NOT enable
+# this feature. Feature enablement in a workspace member appears in
+# Cargo.lock and is reviewable in PR diffs, which is the operative
+# defence against supply-chain attacks that introduce rogue minting.
+system-authority = []
 
 [[bench]]
 name = "spend_bench"

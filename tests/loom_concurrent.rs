@@ -22,7 +22,7 @@
 //! spawn/join synchronisation boundaries.
 //!
 //! Real Budget API used (from src/lib.rs):
-//!   Budget::<MAX>::new(micro_cents)         -> Result<Self, BudgetError>
+//!   Budget::<MAX>::mint(&loom_mint(), micro_cents)         -> Result<Self, BudgetError>
 //!   Budget<MAX>::split(self, amount)        -> Result<(Self, Self), BudgetError>
 //!                                              returns (taken, kept)
 //!   Budget<MAX>::merge(self, other)         -> Result<Self, BudgetError>
@@ -57,6 +57,11 @@ mod loom_tests {
     use std::sync::atomic::{AtomicUsize, Ordering as StdOrdering};
 
     use token_budgets::Budget;
+use token_budgets::BudgetMint;
+
+// Loom-test mint authority. Requires the `system-authority` feature.
+#[cfg(feature = "system-authority")]
+fn loom_mint() -> BudgetMint { BudgetMint::take_authority() }
 
     /// Type-level MAX overflow bound. Comfortably exceeds runtime caps.
     const TEST_MAX: u64 = 1000;
@@ -82,7 +87,7 @@ mod loom_tests {
                     b = after;
                 }
                 Err(_) => {
-                    return Budget::<MAX>::new(0).expect("zero budget");
+                    return Budget::<MAX>::mint(&loom_mint(), 0).expect("zero budget");
                 }
             }
         }
@@ -104,7 +109,7 @@ mod loom_tests {
         loom::model(|| {
             INTERLEAVINGS.fetch_add(1, StdOrdering::SeqCst);
 
-            let original = Budget::<TEST_MAX>::new(100).expect("init");
+            let original = Budget::<TEST_MAX>::mint(&loom_mint(), 100).expect("init");
             let (child, parent) = original.split(40).expect("split");
             // child=40, parent=60
 
@@ -162,7 +167,7 @@ mod loom_tests {
         loom::model(|| {
             INTERLEAVINGS.fetch_add(1, StdOrdering::SeqCst);
 
-            let original = Budget::<TEST_MAX>::new(100).expect("init");
+            let original = Budget::<TEST_MAX>::mint(&loom_mint(), 100).expect("init");
             let (child1, rest) = original.split(30).expect("split1");
             let (child2, parent) = rest.split(30).expect("split2");
             // child1=30, child2=30, parent=40
@@ -239,7 +244,7 @@ mod loom_tests {
         loom::model(|| {
             INTERLEAVINGS.fetch_add(1, StdOrdering::SeqCst);
 
-            let original = Budget::<TEST_MAX>::new(100).expect("init");
+            let original = Budget::<TEST_MAX>::mint(&loom_mint(), 100).expect("init");
             let (child, parent) = original.split(30).expect("split");
             // child=30, parent=70
 

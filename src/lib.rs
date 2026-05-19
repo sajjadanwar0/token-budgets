@@ -1,22 +1,41 @@
-//! # budget-typed-cap
+//! # token-budgets
 //!
 //! Affine resource discipline for LLM cost control in Rust.
-//! Provides Budget<const MAX: u64> with compile-time A2 cap
+//! Provides `Budget<const MAX: u64>` with compile-time A2 cap
 //! enforcement and runtime ownership semantics. Includes:
 //!
-//! - Core Budget<const MAX>: spend / split / merge / consume
-//! - CapAuthority sealed constructor pattern
-//! - Receipt/Refund for reserve-confirm-refund (A1 enforcement)
-//! - BudgetPool for multi-tenant atomic reservation
-//! - StreamingReceipt for per-chunk refund during streaming
-//! - ReasoningProvider for o1/DeepSeek-R1 hidden-token handling
+//! - Core `Budget<const MAX>`: spend / split / merge / consume
+//! - `BudgetMint` capability-token constructor pattern (feature-gated)
+//! - `Receipt`/`Refund` for reserve-confirm-refund (A1 enforcement)
+//! - `BudgetPool` for multi-tenant atomic reservation
+//! - `StreamingReceipt` for per-chunk refund during streaming
+//! - `ReasoningProvider` for o1 / DeepSeek-R1 hidden-token handling
+//!
+//! ## Capability gate (since v0.5)
+//!
+//! Construction of a `Budget` now requires either:
+//!   - A `BudgetMint` capability (preferred): `Budget::mint(&mint, n)`
+//!   - A `CapAuthority` (legacy alias): `Budget::new_sealed(&auth, n)`
+//!
+//! Acquiring a `BudgetMint` requires the `system-authority` Cargo feature,
+//! which should be enabled only in the top-level binary's `Cargo.toml`.
+//! Library crates and transitive dependencies cannot enable this feature
+//! transparently: feature enablement appears in the workspace `Cargo.lock`
+//! and is reviewable in PR diffs.
+//!
+//! `Budget::new` is now `pub(crate)`: workspace-resident rogue crates
+//! cannot mint arbitrary Budget values bypassing the capability gate.
+//! See [`mint`] for the threat model.
 
 pub mod estimator;
 pub mod pool_typestate;
+pub mod mint;
+
 pub use pool_typestate::{ResolvedReceipt, ReservationReceipt};
 
 pub use crate::estimator::{AnthropicEstimator, ByteLength, TokenEstimator};
 
+pub use crate::mint::{BudgetMint, CapAuthority};
 
 #[cfg(feature = "tiktoken")]
 pub use estimator::Tiktoken;
@@ -44,28 +63,10 @@ impl std::fmt::Display for BudgetError {
 impl std::error::Error for BudgetError {}
 
 // ============================================================================
-// CapAuthority: sealed constructor pattern (recommendation, not seal)
-// ============================================================================
-
-mod sealed {
-    pub struct CapAuthorityToken;
-}
-
-pub struct CapAuthority {
-    _seal: sealed::CapAuthorityToken,
-}
-
-impl CapAuthority {
-    pub fn seal_at_startup() -> Self {
-        Self { _seal: sealed::CapAuthorityToken }
-    }
-}
-
-// ============================================================================
 // Budget<const MAX: u64>: core affine resource
 // ============================================================================
-#[derive(Debug)]
 
+#[derive(Debug)]
 pub struct Budget<const MAX: u64> {
     micro_cents: u64,
 }
@@ -75,7 +76,13 @@ impl<const MAX: u64> Budget<MAX> {
         assert!(MAX < (1u64 << 63), "Budget<MAX>: MAX must be < 2^63 for A2 safety");
     };
 
-    pub fn new(micro_cents: u64) -> Result<Self, BudgetError> {
+    /// Crate-private constructor. Callable only from within the
+    /// `token_budgets` crate.
+    ///
+    /// Downstream crates must use [`Budget::mint`] (paper-consistent
+    /// terminology) or [`Budget::new_sealed`] (legacy alias) instead.
+    /// Both require a `BudgetMint` capability.
+    pub(crate) fn new(micro_cents: u64) -> Result<Self, BudgetError> {
         let _: () = Self::_A2_HOLDS;
         if micro_cents > MAX {
             return Err(BudgetError::ExceedsMax);
@@ -83,6 +90,20 @@ impl<const MAX: u64> Budget<MAX> {
         Ok(Self { micro_cents })
     }
 
+    /// Mint a new `Budget` from a capability token.
+    ///
+    /// The `&BudgetMint` parameter is unused at runtime; its presence
+    /// is a compile-time proof that the caller possesses mint authority.
+    /// Acquiring a `BudgetMint` requires the `system-authority` Cargo
+    /// feature (enabled only in top-level binaries).
+    pub fn mint(auth: &BudgetMint, micro_cents: u64) -> Result<Self, BudgetError> {
+        Self::new_sealed(auth, micro_cents)
+    }
+
+    /// Legacy alias for [`Budget::mint`].
+    ///
+    /// Retained for backward compatibility with v0.4 callers.
+    /// Prefer [`Budget::mint`] in new code; the paper uses that name.
     pub fn new_sealed(_auth: &CapAuthority, micro_cents: u64) -> Result<Self, BudgetError> {
         Self::new(micro_cents)
     }
@@ -396,6 +417,11 @@ mod tests {
     use super::*;
     type B = Budget<1_000_000>;
 
+    // Internal tests use `Budget::new` directly because they live inside
+    // the `token_budgets` crate (where `new` is `pub(crate)`). External
+    // tests in `tests/` and examples in `examples/` must use
+    // `Budget::mint(&BudgetMint, ...)` with the `system-authority` feature.
+
     #[test]
     fn basic_construction() {
         let b = B::new(500_000).unwrap();
@@ -462,9 +488,18 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature = "system-authority")]
     fn cap_authority_pattern() {
         let auth = CapAuthority::seal_at_startup();
         let b = B::new_sealed(&auth, 500_000).unwrap();
+        assert_eq!(b.micro_cents(), 500_000);
+    }
+
+    #[test]
+    #[cfg(feature = "system-authority")]
+    fn budget_mint_alias_works() {
+        let mint = BudgetMint::take_authority();
+        let b = Budget::<1_000_000>::mint(&mint, 500_000).unwrap();
         assert_eq!(b.micro_cents(), 500_000);
     }
 
