@@ -151,6 +151,7 @@ impl<const MAX: u64> Budget<MAX> {
 // Receipt / Refund: affine resources for reserve-confirm-refund
 // ============================================================================
 
+#[must_use = "Receipt must be consumed via confirm(), forfeit(), or refund_to()"]
 pub struct Receipt<const MAX: u64> {
     reserved: u64,
 }
@@ -172,6 +173,7 @@ impl<const MAX: u64> Receipt<MAX> {
     }
 }
 
+#[must_use = "Refund must be applied via apply_to() or it will be lost"]
 pub struct Refund<const MAX: u64> {
     amount: u64,
 }
