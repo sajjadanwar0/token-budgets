@@ -11,10 +11,10 @@
 // closures may each be called only once, but creating two
 // closures over the same Budget binding is already a violation.
 
-use token_budgets::{Budget, BudgetMint};
+use token_budgets::Budget;
 
 fn main() {
-    let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
+    let budget = Budget::<10000>::new(500).unwrap();
 
     let closure_a = move || {
         let _ = budget.spend(100);

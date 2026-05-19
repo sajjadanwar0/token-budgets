@@ -14,10 +14,10 @@
 // the move — the borrow checker requires the borrow to end
 // before the move can happen.
 
-use token_budgets::{Budget, BudgetMint};
+use token_budgets::Budget;
 
 fn main() {
-    let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
+    let budget = Budget::<10000>::new(500).unwrap();
     let snapshot_ref = &budget;
 
     // ERROR: cannot move `budget` because it is still borrowed by snapshot_ref.

@@ -12,10 +12,10 @@
 // here — the rejection happens at trait resolution, before any
 // borrow analysis runs.
 
-use token_budgets::{Budget, BudgetMint};
+use token_budgets::Budget;
 
 fn main() {
-    let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
+    let budget = Budget::<10000>::new(500).unwrap();
     // ERROR: Budget<10000> does not implement Clone; the .clone()
     // method is not found in scope.
     let duplicate = budget.clone();

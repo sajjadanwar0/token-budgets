@@ -15,7 +15,7 @@
 // with explicit take()/replace() semantics. Either is fine; the
 // shared-reference shortcut is not.
 
-use token_budgets::{Budget, BudgetMint};
+use token_budgets::Budget;
 
 struct Agent {
     budget: Budget<10000>,
@@ -35,7 +35,7 @@ impl Agent {
 
 fn main() {
     let agent = Agent {
-        budget: { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap(),
+        budget: Budget::<10000>::new(500).unwrap(),
     };
     let _ = agent.try_spend(100);
 }

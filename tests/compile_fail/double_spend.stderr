@@ -1,7 +1,7 @@
 error[E0382]: use of moved value: `budget`
   --> tests/compile_fail/double_spend.rs:23:13
    |
-16 |     let budget = Budget::<10000>::new(500).unwrap();
+16 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
    |         ------ move occurs because `budget` has type `Budget<10000>`, which does not implement the `Copy` trait
 ...
 19 |     let _ = budget.spend(100);

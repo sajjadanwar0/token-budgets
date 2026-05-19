@@ -10,10 +10,10 @@
 // spent, the binding is consumed. To continue spending, the
 // caller must use the returned new Budget from spend's Ok arm.
 
-use token_budgets::{Budget, BudgetMint};
+use token_budgets::Budget;
 
 fn main() {
-    let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
+    let budget = Budget::<10000>::new(500).unwrap();
 
     // First spend consumes `budget` by value.
     let _ = budget.spend(100);
