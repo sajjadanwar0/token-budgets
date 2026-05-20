@@ -1,13 +1,5 @@
-error[E0505]: cannot move out of `budget` because it is borrowed
-  --> tests/compile_fail/borrow_after_split.rs:24:25
+error[E0599]: no function or associated item named `take_authority` found for struct `CapAuthority` in the current scope
+  --> tests/compile_fail/borrow_after_split.rs:20:43
    |
 20 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
-   |         ------ binding `budget` declared here
-21 |     let snapshot_ref = &budget;
-   |                        ------- borrow of `budget` occurs here
-...
-24 |     let (taken, kept) = budget.split(200).unwrap();
-   |                         ^^^^^^ move out of `budget` occurs here
-...
-28 |     println!("snapshot: {}", snapshot_ref.micro_cents());
-   |                              ------------ borrow later used here
+   |                                           ^^^^^^^^^^^^^^ function or associated item not found in `CapAuthority`

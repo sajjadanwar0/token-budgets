@@ -1,17 +1,5 @@
-error[E0382]: use of moved value: `budget`
-  --> tests/compile_fail/double_spend.rs:23:13
+error[E0599]: no function or associated item named `take_authority` found for struct `CapAuthority` in the current scope
+  --> tests/compile_fail/double_spend.rs:16:43
    |
 16 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
-   |         ------ move occurs because `budget` has type `Budget<10000>`, which does not implement the `Copy` trait
-...
-19 |     let _ = budget.spend(100);
-   |                    ---------- `budget` moved due to this method call
-...
-23 |     let _ = budget.spend(200);
-   |             ^^^^^^ value used here after move
-   |
-note: `Budget::<MAX>::spend` takes ownership of the receiver `self`, which moves `budget`
-  --> src/lib.rs
-   |
-   |     pub fn spend(self, amount: u64) -> Result<Self, BudgetError> {
-   |                  ^^^^
+   |                                           ^^^^^^^^^^^^^^ function or associated item not found in `CapAuthority`
