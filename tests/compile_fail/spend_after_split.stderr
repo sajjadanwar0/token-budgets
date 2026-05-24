@@ -1,5 +1,17 @@
-error[E0599]: no function or associated item named `take_authority` found for struct `CapAuthority` in the current scope
-  --> tests/compile_fail/spend_after_split.rs:17:43
+error[E0382]: use of moved value: `budget`
+  --> tests/compile_fail/spend_after_split.rs:24:13
    |
 17 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
-   |                                           ^^^^^^^^^^^^^^ function or associated item not found in `CapAuthority`
+   |         ------ move occurs because `budget` has type `Budget<10000>`, which does not implement the `Copy` trait
+...
+20 |     let (taken, kept) = budget.split(200).unwrap();
+   |                                ---------- `budget` moved due to this method call
+...
+24 |     let _ = budget.spend(50);
+   |             ^^^^^^ value used here after move
+   |
+note: `Budget::<MAX>::split` takes ownership of the receiver `self`, which moves `budget`
+  --> src/lib.rs
+   |
+   |     pub fn split(self, amount: u64) -> Result<(Self, Self), BudgetError> {
+   |                  ^^^^

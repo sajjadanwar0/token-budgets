@@ -1,5 +1,15 @@
-error[E0599]: no function or associated item named `take_authority` found for struct `CapAuthority` in the current scope
-  --> tests/compile_fail/double_capture.rs:17:43
+error[E0382]: use of moved value: `budget`
+  --> tests/compile_fail/double_capture.rs:25:21
    |
 17 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
-   |                                           ^^^^^^^^^^^^^^ function or associated item not found in `CapAuthority`
+   |         ------ move occurs because `budget` has type `Budget<10000>`, which does not implement the `Copy` trait
+18 |
+19 |     let closure_a = move || {
+   |                     ------- value moved into closure here
+20 |         let _ = budget.spend(100);
+   |                 ------ variable moved due to use in closure
+...
+25 |     let closure_b = move || {
+   |                     ^^^^^^^ value used here after move
+26 |         let _ = budget.spend(200);
+   |                 ------ use occurs due to use in closure

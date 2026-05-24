@@ -1,0 +1,24 @@
+# .token_budgets_authority.toml — operator-controlled allowlist for
+# the `system-authority` Cargo feature.
+#
+# Place this file in the workspace root. The token-budgets build.rs
+# reads it when `system-authority` is enabled and fails the build if
+# any non-allowlisted crate has activated the feature.
+#
+# See docs/trust-boundary.md for the full threat model.
+
+# Version tag pinning the allowlist to a tagged commit.
+git_tag = "v1.0.0"
+
+# Crate names allowed to enable the system-authority feature.
+# Add only crates that you have explicitly audited and approved
+# to mint Budget values.
+allowed_activators = [
+    "my-agent-runtime",
+    # "another-trusted-crate",
+]
+
+# Optional: SHA-256 of the workspace's Cargo.lock at the pinned tag.
+# The (planned) `cargo verify-authority` subcommand will verify the
+# current Cargo.lock matches this hash.
+# cargo_lock_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"

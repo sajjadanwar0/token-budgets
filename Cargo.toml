@@ -38,3 +38,10 @@ system-authority = []
 name = "spend_bench"
 harness = false
 required-features = ["system-authority"]
+
+# Compile-fail tests must run with system-authority enabled, otherwise
+# they fail at BudgetMint::take_authority() (E0599) instead of at the
+# intended affine violation (E0382/E0505 etc.).
+[[test]]
+name = "compile_fail"
+required-features = ["system-authority"]

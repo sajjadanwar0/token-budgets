@@ -1,0 +1,15 @@
+[package]
+name = "cargo-verify-authority"
+version = "0.1.0"
+edition = "2024"
+description = "Verify token-budgets allowlist consistency with Cargo.lock"
+license = "MIT OR Apache-2.0"
+
+[[bin]]
+name = "cargo-verify-authority"
+path = "src/main.rs"
+
+[dependencies]
+toml = "0.8"
+sha2 = "0.10"
+serde = { version = "1", features = ["derive"] }

@@ -1,2 +1,27 @@
-# Project exclude paths
+# Rust build artifacts — ALL variants
 /target/
+/target-*/
+**/target/
+**/target-*/
+
+# Loom output: keep only v4 (the authoritative count for paper §5.37)
+loom_run.log
+loom_run_v[123].log
+loom_run_v[5-9].log
+*.loom.log
+
+# Criterion output
+criterion/
+
+# Backup files
+**/*.rs.bak
+**/*.bak
+
+# Editor / IDE
+/.idea/
+/.vscode/
+*.swp
+*~
+
+# OS
+.DS_Store

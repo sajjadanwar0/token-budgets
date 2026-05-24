@@ -1,5 +1,21 @@
-error[E0599]: no function or associated item named `take_authority` found for struct `CapAuthority` in the current scope
-  --> tests/compile_fail/budget_in_rc.rs:28:43
+error[E0277]: `Rc<Budget<10000>>` cannot be sent between threads safely
+  --> tests/compile_fail/budget_in_rc.rs:34:32
    |
-28 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
-   |                                           ^^^^^^^^^^^^^^ function or associated item not found in `CapAuthority`
+34 |       let handle = thread::spawn(move || {
+   |                    ------------- ^------
+   |                    |             |
+   |  __________________|_____________within this `{closure@$DIR/tests/compile_fail/budget_in_rc.rs:34:32: 34:39}`
+   | |                  |
+   | |                  required by a bound introduced by this call
+35 | |         let _ = s1.micro_cents();
+36 | |     });
+   | |_____^ `Rc<Budget<10000>>` cannot be sent between threads safely
+   |
+   = help: within `{closure@$DIR/tests/compile_fail/budget_in_rc.rs:34:32: 34:39}`, the trait `Send` is not implemented for `Rc<Budget<10000>>`
+note: required because it's used within this closure
+  --> tests/compile_fail/budget_in_rc.rs:34:32
+   |
+34 |     let handle = thread::spawn(move || {
+   |                                ^^^^^^^
+note: required by a bound in `spawn`
+  --> $RUST/std/src/thread/functions.rs

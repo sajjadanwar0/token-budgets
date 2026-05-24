@@ -2,26 +2,36 @@
 
 Compile-time affine typing for LLM cost caps in Rust. The main library crate.
 
-This is the implementation accompanying the paper *Token Budgets: A 4-Tier Formal Verification of Compile-Time Affine Typing for LLM Cost Caps*, currently under review at *Empirical Software Engineering*.
+This is the implementation accompanying the paper *Token Budgets: Compile-Time Affine Integrity and Runtime Cap Enforcement for LLM Cost Caps in Rust*, currently under review at *Empirical Software Engineering*.
 
 ## What this crate gives you
 
 A `Budget<T>` type that you cannot duplicate, cannot use twice, and cannot exceed:
 
 ```rust
-use token_budgets::{Budget, BudgetError};
+use token_budgets::{Budget, BudgetError, BudgetMint};
 
-let b = Budget::new(1000)?;          // construct with cap of 1000 tokens
+// Construction requires the `system-authority` feature (see Cargo.toml).
+// In your top-level binary's Cargo.toml:
+//   token-budgets = { version = "0.5", features = ["system-authority"] }
+let mint = BudgetMint::take_authority();
+let b: Budget<10000> = Budget::mint(&mint, 1000)?;  // cap of 1000 micro-cents
+
 let (lhs, rhs) = b.split(400)?;      // splits into two budgets summing to 1000
-lhs.spend(350)?;                      // consume 350, returns Receipt
-// lhs.spend(100)?;                   // COMPILE ERROR: lhs was moved
+let lhs = lhs.spend(350)?;            // consume 350, returns a new Budget with remainder
+// let _ = lhs.spend(100)?;          // ALSO MOVES lhs; the prior binding is gone
 ```
+
+> **Note**: `Budget::new` is crate-private (`pub(crate)`) since v0.5.
+> Public construction goes through `BudgetMint::take_authority()` +
+> `Budget::mint()`, gated behind the `system-authority` Cargo feature.
+> See `docs/trust-boundary.md` for the threat model.
 
 The type system enforces that:
 
 - A `Budget` cannot be cloned (no `Clone` impl). Once consumed, it's gone.
 - Sub-budgets sum to ≤ the parent (`split` and `merge` are conservation laws).
-- A spent budget yields a `Receipt`, not a re-usable balance.
+- A spent budget yields a new `Budget` carrying the remainder; the prior binding is moved and cannot be used again. A separate `Receipt` type is produced by `spend_with_receipt()` for accounting trails.
 - A pool with reservations cannot oversubscribe (`Pool` typestate machine).
 
 This sits one layer below `tokio` and one layer above your model client (Anthropic, OpenAI, Mistral, etc.).
@@ -34,14 +44,15 @@ token-budgets = "0.5"
 ```
 
 ```rust
-use token_budgets::{Budget, AnthropicEstimator, TokenEstimator};
+use token_budgets::{Budget, BudgetMint, AnthropicEstimator, TokenEstimator};
 
-let budget = Budget::new(5000)?;
+let mint = BudgetMint::take_authority();
+let budget: Budget<5000> = Budget::mint(&mint, 5000)?;
 let estimator = AnthropicEstimator::default();      // 2.0× margin (load-bearing; §5.22)
 let estimate = estimator.estimate(&prompt);
 let (for_call, remaining) = budget.split(estimate)?;
 let response = call_model(prompt, &for_call).await?;
-let receipt = for_call.spend(response.tokens_used)?;
+let for_call = for_call.spend(response.tokens_used)?;  // returns the remaining Budget
 ```
 
 ## Reproducibility (paper Table 21 / Table 30)

@@ -1,9 +1,3 @@
-error[E0599]: no function or associated item named `take_authority` found for struct `CapAuthority` in the current scope
-  --> tests/compile_fail/spend_through_shared_ref.rs:38:42
-   |
-38 |         budget: { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap(),
-   |                                          ^^^^^^^^^^^^^^ function or associated item not found in `CapAuthority`
-
 error[E0507]: cannot move out of `self.budget` which is behind a shared reference
   --> tests/compile_fail/spend_through_shared_ref.rs:29:15
    |
