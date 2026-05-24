@@ -1,0 +1,9 @@
+# .github/workflows/ci.yml addition
+- name: Verify allowlist is tag-pinned to current commit
+  run: |
+    CURRENT_TAG=$(git describe --tags --abbrev=0)
+    ALLOWLIST_TAG=$(grep '^git_tag' .token_budgets_authority.toml | cut -d'"' -f2)
+    if [ "$CURRENT_TAG" != "$ALLOWLIST_TAG" ]; then
+      echo "ERROR: allowlist git_tag ($ALLOWLIST_TAG) does not match current tag ($CURRENT_TAG)"
+      exit 1
+    fi
