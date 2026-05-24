@@ -270,9 +270,21 @@ ok "trybuild tests passed"
 # Phase 6: Microbenchmarks
 # ---------------------------------------------------------------------------
 log "Phase 6: Criterion microbenchmarks"
-log "  cargo bench --bench spend_bench (target: 1.18 ns)"
-cargo bench --bench spend_bench --quiet 2>&1 | grep -E "spend|time:" | head -5 || true
-ok "Microbench complete (compare time to ~1.18 ns)"
+log "  cargo bench --features system-authority --bench spend_bench (target: 1.18 ns)"
+# The bench requires --features system-authority because it calls BudgetMint::take_authority()
+# to construct test Budget values (same gate as the loom test in Phase 7).
+BENCH_OUT=$(cargo bench --features system-authority --bench spend_bench --quiet 2>&1) || true
+# Show measured ns timing line if present
+echo "$BENCH_OUT" | grep -E "spend|time:" | head -5 || true
+# Check whether the bench actually compiled and ran
+if echo "$BENCH_OUT" | grep -qE "error\[|error:"; then
+    fail "Microbench failed to build (check cargo output above)"
+elif echo "$BENCH_OUT" | grep -qE "time:|throughput"; then
+    ok "Microbench complete (Criterion timing line printed above; compare to paper's 1.18 ns)"
+else
+    # Bench compiled but no Criterion output captured (--quiet may suppress it). Treat as soft-ok.
+    ok "Microbench complete (no timing line captured under --quiet; run without --quiet for details)"
+fi
 
 # ---------------------------------------------------------------------------
 # Phase 7: Loom interleavings
