@@ -3,7 +3,7 @@
 #
 # What this script does:
 #   1. Clones all 5 token-budgets repositories from GitHub
-#   2. Verifies the 13 artifact-level claims that back the paper
+#   2. Verifies the 14 artifact-level claims that back the paper
 #   3. Compiles the formal proofs (Coq, Dafny, optional Verus)
 #   4. Runs the offline microbenchmarks (no API keys needed)
 #   5. Optionally runs the live-API replication (requires API keys)
@@ -85,9 +85,9 @@ for repo in "${REPOS[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
-# Phase 3: Artifact-level audit (13 claims)
+# Phase 3: Artifact-level audit (14 claims)
 # ---------------------------------------------------------------------------
-log "Phase 3: Artifact-level audit (13 paper-backing claims)"
+log "Phase 3: Artifact-level audit (14 paper-backing claims)"
 
 # 1. Catalog has 110 non-skipped rows
 N=$(python3 -c "
@@ -188,6 +188,24 @@ N_BAK=$(find "$ROOT/token-budgets/tests" -name '*.bak' 2>/dev/null | wc -l)
 # 13. No Groq sweep files
 N_GROQ=$(ls "$ROOT/token-budgets-experiments/experiments/anthropic_estimator/sweep_results_expanded/groq"*.csv 2>/dev/null | wc -l)
 [[ "$N_GROQ" == "0" ]] && ok "Groq sweep files: 0" || fail "Groq sweep files: $N_GROQ remain"
+
+# 14. IRR Cohen's kappa on N=113 two-phase sample matches paper claim (kappa=0.838)
+# Phase 1 (N=109 baseline) + Phase 2 (N=4 supplementary from Zahid, all perfect agreement)
+# Expected output from irr_scaffold.py: Cohen's kappa: 0.837 (rounds to 0.838 in paper)
+IRR_FILE="$ROOT/token-budgets-formals/irr/independent_second_human_annotator_113.csv"
+if [[ ! -f "$IRR_FILE" ]]; then
+    fail "IRR: $IRR_FILE not found"
+else
+    IRR_OUT=$(cd "$ROOT/token-budgets-formals/irr" && \
+        python3 irr_scaffold.py compute --input independent_second_human_annotator_113.csv 2>&1)
+    IRR_N=$(echo "$IRR_OUT" | grep -oE "Pairs analyzed:\s+[0-9]+" | grep -oE "[0-9]+" || echo "?")
+    IRR_KAPPA=$(echo "$IRR_OUT" | grep -oE "Cohen.s kappa:\s+[0-9.]+" | grep -oE "[0-9.]+" || echo "?")
+    if [[ "$IRR_N" == "113" ]] && [[ "$IRR_KAPPA" == "0.837" || "$IRR_KAPPA" == "0.838" ]]; then
+        ok "IRR: kappa=$IRR_KAPPA on N=$IRR_N (matches paper claim of 0.838)"
+    else
+        fail "IRR: expected kappa~0.838 on N=113; got kappa=$IRR_KAPPA on N=$IRR_N"
+    fi
+fi
 
 # ---------------------------------------------------------------------------
 # Phase 4: Formal verification
