@@ -186,7 +186,8 @@ N_BAK=$(find "$ROOT/token-budgets/tests" -name '*.bak' 2>/dev/null | wc -l)
 [[ "$N_BAK" == "0" ]] && ok ".bak files: 0" || fail ".bak files: $N_BAK remain"
 
 # 13. No Groq sweep files
-N_GROQ=$(ls "$ROOT/token-budgets-experiments/experiments/anthropic_estimator/sweep_results_expanded/groq"*.csv 2>/dev/null | wc -l)
+# Use find (handles "no files" gracefully under pipefail, unlike ls)
+N_GROQ=$(find "$ROOT/token-budgets-experiments/experiments/anthropic_estimator/sweep_results_expanded" -maxdepth 1 -name 'groq*.csv' 2>/dev/null | wc -l)
 [[ "$N_GROQ" == "0" ]] && ok "Groq sweep files: 0" || fail "Groq sweep files: $N_GROQ remain"
 
 # 14. IRR Cohen's kappa on N=113 two-phase sample matches paper claim (kappa=0.838)
@@ -197,9 +198,10 @@ if [[ ! -f "$IRR_FILE" ]]; then
     fail "IRR: $IRR_FILE not found"
 else
     IRR_OUT=$(cd "$ROOT/token-budgets-formals/irr" && \
-        python3 irr_scaffold.py compute --input independent_second_human_annotator_113.csv 2>&1)
-    IRR_N=$(echo "$IRR_OUT" | grep -oE "Pairs analyzed:\s+[0-9]+" | grep -oE "[0-9]+" || echo "?")
-    IRR_KAPPA=$(echo "$IRR_OUT" | grep -oE "Cohen.s kappa:\s+[0-9.]+" | grep -oE "[0-9.]+" || echo "?")
+        python3 irr_scaffold.py compute --input independent_second_human_annotator_113.csv 2>&1) || IRR_OUT=""
+    # Use grep -E and tolerate non-match (return || echo "?") for pipefail safety
+    IRR_N=$(echo "$IRR_OUT" | grep -oE "Pairs analyzed:[[:space:]]+[0-9]+" 2>/dev/null | grep -oE "[0-9]+$" 2>/dev/null || echo "?")
+    IRR_KAPPA=$(echo "$IRR_OUT" | grep -oE "Cohen.s kappa:[[:space:]]+[0-9.]+" 2>/dev/null | grep -oE "[0-9.]+" 2>/dev/null || echo "?")
     if [[ "$IRR_N" == "113" ]] && [[ "$IRR_KAPPA" == "0.837" || "$IRR_KAPPA" == "0.838" ]]; then
         ok "IRR: kappa=$IRR_KAPPA on N=$IRR_N (matches paper claim of 0.838)"
     else
