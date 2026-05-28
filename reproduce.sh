@@ -3,7 +3,7 @@
 #
 # What this script does:
 #   1. Clones all 5 token-budgets repositories from GitHub
-#   2. Verifies the 14 artifact-level claims that back the paper
+#   2. Verifies the 19 artifact-level claims that back the paper
 #   3. Compiles the formal proofs (Coq, Dafny, optional Verus)
 #   4. Runs the offline microbenchmarks (no API keys needed)
 #   5. Optionally runs the live-API replication (requires API keys)
@@ -85,9 +85,9 @@ for repo in "${REPOS[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
-# Phase 3: Artifact-level audit (14 claims)
+# Phase 3: Artifact-level audit (19 claims)
 # ---------------------------------------------------------------------------
-log "Phase 3: Artifact-level audit (14 paper-backing claims)"
+log "Phase 3: Artifact-level audit (19 paper-backing claims)"
 
 # 1. Catalog has 110 non-skipped rows
 N=$(python3 -c "
@@ -203,10 +203,109 @@ else
     IRR_N=$(echo "$IRR_OUT" | grep -oE "Pairs analyzed:[[:space:]]+[0-9]+" 2>/dev/null | grep -oE "[0-9]+$" 2>/dev/null || echo "?")
     IRR_KAPPA=$(echo "$IRR_OUT" | grep -oE "Cohen.s kappa:[[:space:]]+[0-9.]+" 2>/dev/null | grep -oE "[0-9.]+" 2>/dev/null || echo "?")
     if [[ "$IRR_N" == "113" ]] && [[ "$IRR_KAPPA" == "0.837" ]]; then
-        ok "IRR: kappa=$IRR_KAPPA on N=$IRR_N (matches paper claim of 0.837)"
+        ok "IRR v1.0: kappa=$IRR_KAPPA on N=$IRR_N (matches paper claim of 0.837)"
     else
-        fail "IRR: expected kappa=0.837 on N=113; got kappa=$IRR_KAPPA on N=$IRR_N"
+        fail "IRR v1.0: expected kappa=0.837 on N=113; got kappa=$IRR_KAPPA on N=$IRR_N"
     fi
+fi
+
+# 15. M6 v1.1-draft directory present (audit trail per paper §8.3 M6)
+# This is the SUPERSEDED 22-case attempt, retained for transparency about
+# the protocol iteration described in the paper's "Protocol iteration" sub-paragraph.
+IRR_DRAFT="$ROOT/token-budgets-formals/irr/v1.1-draft"
+if [[ ! -d "$IRR_DRAFT" ]]; then
+    fail "M6 v1.1-draft directory not found ($IRR_DRAFT)"
+else
+    DRAFT_MISSING=""
+    # Returned sheet may be either `returned_sheet.csv` (kept original name from rater B)
+    # or `returned_sheet_22cases.csv` (canonical name with case-count suffix). Accept either.
+    if [[ ! -f "$IRR_DRAFT/returned_sheet.csv" ]] && [[ ! -f "$IRR_DRAFT/returned_sheet_22cases.csv" ]]; then
+        DRAFT_MISSING="$DRAFT_MISSING returned_sheet[_22cases].csv"
+    fi
+    for f in codebook_v1_1_draft.md blinded_coding_sheet_22cases.csv \
+             kappa_v1_1_draft_report.txt \
+             manifest_v1_1_draft.txt README.md; do
+        [[ -f "$IRR_DRAFT/$f" ]] || DRAFT_MISSING="$DRAFT_MISSING $f"
+    done
+    if [[ -z "$DRAFT_MISSING" ]]; then
+        ok "M6 v1.1-draft directory complete (6 files for audit trail)"
+    else
+        fail "M6 v1.1-draft missing files:$DRAFT_MISSING"
+    fi
+fi
+
+# 16. M6 v1.1-final directory present (primary v1.1 result per paper §8.3 M6)
+IRR_FINAL="$ROOT/token-budgets-formals/irr/v1.1-final"
+if [[ ! -d "$IRR_FINAL" ]]; then
+    fail "M6 v1.1-final directory not found ($IRR_FINAL)"
+else
+    FINAL_MISSING=""
+    # Returned sheet may be either `returned_sheet.csv` (kept original name from rater B)
+    # or `returned_sheet_113cases.csv` (canonical name with case-count suffix). Accept either.
+    if [[ ! -f "$IRR_FINAL/returned_sheet.csv" ]] && [[ ! -f "$IRR_FINAL/returned_sheet_113cases.csv" ]]; then
+        FINAL_MISSING="$FINAL_MISSING returned_sheet[_113cases].csv"
+    fi
+    for f in codebook_v1_1_final.md blinded_coding_sheet_113cases.csv \
+             kappa_v1_1_final_report.txt \
+             manifest_v1_1_final.txt compute_v1_1_kappa.py \
+             generate_blinded_sheet_v3.py README.md; do
+        [[ -f "$IRR_FINAL/$f" ]] || FINAL_MISSING="$FINAL_MISSING $f"
+    done
+    if [[ -z "$FINAL_MISSING" ]]; then
+        ok "M6 v1.1-final directory complete (8 files for primary result)"
+    else
+        fail "M6 v1.1-final missing files:$FINAL_MISSING"
+    fi
+fi
+
+# 17. M6 v1.1-final kappa report has the expected pre-committed outcome (iii)
+# Paper §5 reports kappa_fr_v1.1-final = 0.075, outcome (iii), 81 of 113 reclassified
+KAPPA_REPORT="$IRR_FINAL/kappa_v1_1_final_report.txt"
+if [[ ! -f "$KAPPA_REPORT" ]]; then
+    fail "M6 v1.1-final kappa report not found (see check #16)"
+else
+    HAS_OUTCOME_III=$(grep -c "OUTCOME: (iii)" "$KAPPA_REPORT" 2>/dev/null || echo 0)
+    HAS_KAPPA=$(grep -c "0\.0746\|0\.075" "$KAPPA_REPORT" 2>/dev/null || echo 0)
+    HAS_RECLASSIFIED=$(grep -c "Rows changed.*: 81" "$KAPPA_REPORT" 2>/dev/null || echo 0)
+    if [[ "$HAS_OUTCOME_III" -ge 1 ]] && [[ "$HAS_KAPPA" -ge 1 ]] && [[ "$HAS_RECLASSIFIED" -ge 1 ]]; then
+        ok "M6 v1.1-final: outcome (iii), kappa_fr=0.075, 81 reclassified (paper §5)"
+    else
+        fail "M6 v1.1-final report does not match paper claims (outcome iii / kappa 0.075 / 81 reclassified)"
+    fi
+fi
+
+# 18. M7 Condition E results present and 0/30 overshoot (paper §5.11 Table 14 row E)
+# Condition E: Rust shared Arc<Mutex<Budget>>, B_0=60 uc, 3 children, 30 trials
+CE_DIR="$ROOT/token-budgets-experiments/forgetful_operator/condition_e_rust_shared"
+CE_RESULTS="$CE_DIR/condition_e_results.csv"
+if [[ ! -f "$CE_RESULTS" ]]; then
+    fail "M7 Condition E results not found ($CE_RESULTS)"
+else
+    CE_AUDIT=$(python3 - <<PYEOF
+import csv
+from collections import defaultdict
+spend = defaultdict(int)
+trials = set()
+with open('$CE_RESULTS') as f:
+    for r in csv.DictReader(f):
+        trials.add(r['trial_id'])
+        spend[r['trial_id']] += int(r['actual_charge_uc'])
+overshoot = sum(1 for s in spend.values() if s > 60)
+print(f"{overshoot}/{len(trials)}")
+PYEOF
+)
+    if [[ "$CE_AUDIT" == "0/30" ]]; then
+        ok "M7 Condition E: $CE_AUDIT overshoot (matches paper Table 14 row E)"
+    else
+        fail "M7 Condition E: expected 0/30 overshoot; got $CE_AUDIT"
+    fi
+fi
+
+# 19. M7 Condition E harness source + Cargo.toml present
+if [[ -f "$CE_DIR/src/main.rs" ]] && [[ -f "$CE_DIR/Cargo.toml" ]]; then
+    ok "M7 Condition E harness source present (src/main.rs + Cargo.toml)"
+else
+    fail "M7 Condition E harness source missing (expected $CE_DIR/{src/main.rs,Cargo.toml})"
 fi
 
 # ---------------------------------------------------------------------------
@@ -267,9 +366,29 @@ cargo test --release --features system-authority --test compile_fail --quiet 2>&
 ok "trybuild tests passed"
 
 # ---------------------------------------------------------------------------
+# Phase 5.5: M7 Condition E harness build check (offline; no API calls)
+# ---------------------------------------------------------------------------
+log "Phase 5.5: M7 Condition E harness build (offline check; --with-live required to execute)"
+CE_DIR="$ROOT/token-budgets-experiments/forgetful_operator/condition_e_rust_shared"
+if [[ -d "$CE_DIR" ]]; then
+    cd "$CE_DIR"
+    if cargo build --release --quiet 2>&1 | tail -5; then
+        ok "M7 Condition E harness builds successfully"
+    else
+        fail "M7 Condition E harness build failed (see cargo output)"
+    fi
+    # Return to token-budgets/ (not $ROOT), so Phase 6's `cargo bench` runs
+    # in the crate root that owns the spend_bench bench target. Without this
+    # the bench fails with "no Cargo.toml" and the grep pattern below
+    # spuriously catches "error" in cargo's error message.
+    cd "$ROOT/token-budgets"
+fi
+
+# ---------------------------------------------------------------------------
 # Phase 6: Microbenchmarks
 # ---------------------------------------------------------------------------
 log "Phase 6: Criterion microbenchmarks"
+cd "$ROOT/token-budgets"   # defensive: ensure cwd is the crate root
 log "  cargo bench --features system-authority --bench spend_bench (target: 1.18 ns)"
 # The bench requires --features system-authority because it calls BudgetMint::take_authority()
 # to construct test Budget values (same gate as the loom test in Phase 7).
@@ -331,6 +450,20 @@ if [[ $LIVE_MODE -eq 1 ]]; then
     ok "Live multi-runtime sweep complete"
     deactivate
     cd "$ROOT"
+
+    # M7 Condition E live re-execution
+    log "  M7 Condition E live re-execution (~\$0.005, 5 min)"
+    if [[ -d "$CE_DIR" ]]; then
+        cd "$CE_DIR"
+        cargo run --release --quiet -- \
+            --trials 30 --budget 60 --children 3 \
+            --output condition_e_results_replay.csv \
+            --model claude-haiku-4-5 \
+            --temperature 0.0 --max-output-tokens 30 \
+            --per-child-estimate 31 2>&1 | tail -5 || fail "M7 Condition E live re-execution failed"
+        ok "M7 Condition E re-executed; compare condition_e_results_replay.csv vs committed condition_e_results.csv"
+        cd "$ROOT"
+    fi
 fi
 
 # ---------------------------------------------------------------------------
