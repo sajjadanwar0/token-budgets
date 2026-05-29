@@ -7,10 +7,6 @@ edition     = "2024"
 tiktoken-rs = { version = "0.11.0", optional = true }
 anyhow      = "1"
 
-# Mutually exclusive: tokio under non-loom builds, loom under loom builds.
-# This works around tokio-1.52's cfg(loom) regression where tokio's own
-# task/local.rs imports AtomicWaker unconditionally despite AtomicWaker
-# being gated cfg(not(loom)).
 [target.'cfg(not(loom))'.dependencies]
 tokio = { version = "1", features = ["rt", "macros"] }
 
@@ -22,16 +18,12 @@ criterion   = "0.8.2"
 trybuild    = "1.0"
 
 [lints.rust]
+unsafe_code = "forbid"
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(loom)'] }
 
 [features]
 default = []
 tiktoken = ["dep:tiktoken-rs"]
-# system-authority: gates BudgetMint::take_authority(). Enable in your
-# top-level binary's Cargo.toml ONLY. Library crates should NOT enable
-# this feature. Feature enablement in a workspace member appears in
-# Cargo.lock and is reviewable in PR diffs, which is the operative
-# defense against supply-chain attacks that introduce rogue minting.
 system-authority = []
 
 [[bench]]
@@ -39,9 +31,6 @@ name = "spend_bench"
 harness = false
 required-features = ["system-authority"]
 
-# Compile-fail tests must run with system-authority enabled, otherwise
-# they fail at BudgetMint::take_authority() (E0599) instead of at the
-# intended affine violation (E0382/E0505 etc.).
 [[test]]
 name = "compile_fail"
 required-features = ["system-authority"]

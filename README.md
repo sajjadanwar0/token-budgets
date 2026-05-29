@@ -123,8 +123,8 @@ The replication artifact is organised as five sibling directories:
 - `token-budgets-formals` — formal verification (Verus 66 obligations; TLAPS 497
   obligations; TLC 252 states at B0=5; Coq and Dafny re-encodings) plus the IRR
   package (codebook v1.0, blinded coding sheets, **κ = 0.837 on N = 113**).
-- `token-budgets-experiments` — multi-runtime evaluation harness, fair-baseline
-  corpus, refund-live results, A1 calibration, A7 fault injection.
+- `token-budgets-experiments` — multi-runtime evaluation harness, refund-live
+  results, A1 calibration, A7 fault injection.
 - `token-budgets-python` — runtime-only Python port (no compile-time guarantees).
 - `token-budgets-extensions` — adaptive estimator and Verus skeleton.
 
