@@ -3,7 +3,7 @@
 #
 # What this script does:
 #   1. Clones the token-budgets repositories from GitHub
-#   2. Verifies the 15 artifact-level claims that back the paper
+#   2. Verifies the 16 artifact-level claims that back the paper
 #   3. Compiles the formal proofs (Coq, Dafny, optional Verus)
 #   4. Runs the offline microbenchmarks (no API keys needed)
 #   5. Optionally runs the live-API replication (requires API keys)
@@ -218,6 +218,24 @@ if grep -qE 'unsafe_code[[:space:]]*=[[:space:]]*"forbid"' "$ROOT/token-budgets/
     ok "forbid(unsafe_code) enforced (crate-level)"
 else
     fail "forbid(unsafe_code) not enforced — paper claims the crate is built under it"
+fi
+
+# 16. Live over-reservation corpus reproduces paper §1.2 / Acknowledgements:
+#     5,410 live-API row-events; N=5,190 carry per-call reservation/actual ratios;
+#     6.20x mean over-reservation (2.51x median). Backs the §1.2 cost claim.
+RL_DIR="$ROOT/token-budgets-experiments/refund-live"
+if [[ ! -f "$RL_DIR/refund_live_over_reservation.py" ]]; then
+    fail "over-reservation: refund_live_over_reservation.py not found in refund-live/ (push it to GitHub)"
+else
+    OR_OUT=$(cd "$RL_DIR" && python3 refund_live_over_reservation.py . 2>&1)
+    OR_TOTAL=$(echo "$OR_OUT" | grep -E 'row-event corpus' | grep -oE '[0-9]+' | head -1)
+    OR_N=$(echo "$OR_OUT"     | grep -E 'sample \(N\)'     | grep -oE '[0-9]+' | head -1)
+    OR_MEAN=$(echo "$OR_OUT"  | grep -E '^[[:space:]]*mean[[:space:]]' | grep -oE '[0-9]+\.[0-9]+' | head -1)
+    if [[ "$OR_TOTAL" == "5410" && "$OR_N" == "5190" && "$OR_MEAN" == "6.20" ]]; then
+        ok "over-reservation: corpus=$OR_TOTAL, N=$OR_N, mean=${OR_MEAN}x (paper §1.2 / Acknowledgements)"
+    else
+        fail "over-reservation: expected 5410 / 5190 / 6.20x; got ${OR_TOTAL:-?} / ${OR_N:-?} / ${OR_MEAN:-?}x"
+    fi
 fi
 
 # ---------------------------------------------------------------------------

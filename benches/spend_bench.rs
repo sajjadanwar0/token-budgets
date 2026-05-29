@@ -1,14 +1,3 @@
-//! Microbenchmark for `Budget::spend` with proper `black_box` discipline.
-//!
-//! Build with:
-//!
-//! ```text
-//! cargo bench --bench spend_bench --features system-authority
-//! ```
-//!
-//! Running `cargo bench` without that feature fails because
-//! `BudgetMint::take_authority` is gated; this is desired.
-
 use token_budgets::{Budget, BudgetMint};
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::hint::black_box;

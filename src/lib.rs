@@ -1,32 +1,3 @@
-//! # token-budgets
-//!
-//! Affine resource discipline for LLM cost control in Rust.
-//! Provides `Budget<const MAX: u64>` with compile-time A2 cap
-//! enforcement and runtime ownership semantics. Includes:
-//!
-//! - Core `Budget<const MAX>`: spend / split / merge / consume
-//! - `BudgetMint` capability-token constructor pattern (feature-gated)
-//! - `Receipt`/`Refund` for reserve-confirm-refund (A1 enforcement)
-//! - `BudgetPool` for multi-tenant atomic reservation
-//! - `StreamingReceipt` for per-chunk refund during streaming
-//! - `ReasoningProvider` for o1 / DeepSeek-R1 hidden-token handling
-//!
-//! ## Capability gate (since v0.5)
-//!
-//! Construction of a `Budget` now requires either:
-//!   - A `BudgetMint` capability (preferred): `Budget::mint(&mint, n)`
-//!   - A `CapAuthority` (legacy alias): `Budget::new_sealed(&auth, n)`
-//!
-//! Acquiring a `BudgetMint` requires the `system-authority` Cargo feature,
-//! which should be enabled only in the top-level binary's `Cargo.toml`.
-//! Library crates and transitive dependencies cannot enable this feature
-//! transparently: feature enablement appears in the workspace `Cargo.lock`
-//! and is reviewable in PR diffs.
-//!
-//! `Budget::new` is now `pub(crate)`: workspace-resident rogue crates
-//! cannot mint arbitrary Budget values bypassing the capability gate.
-//! See [`mint`] for the threat model.
-
 pub mod estimator;
 pub mod pool_typestate;
 pub mod mint;
@@ -62,10 +33,6 @@ impl std::fmt::Display for BudgetError {
 
 impl std::error::Error for BudgetError {}
 
-// ============================================================================
-// Budget<const MAX: u64>: core affine resource
-// ============================================================================
-
 #[derive(Debug)]
 pub struct Budget<const MAX: u64> {
     micro_cents: u64,
@@ -76,12 +43,6 @@ impl<const MAX: u64> Budget<MAX> {
         assert!(MAX < (1u64 << 63), "Budget<MAX>: MAX must be < 2^63 for A2 safety");
     };
 
-    /// Crate-private constructor. Callable only from within the
-    /// `token_budgets` crate.
-    ///
-    /// Downstream crates must use [`Budget::mint`] (paper-consistent
-    /// terminology) or [`Budget::new_sealed`] (legacy alias) instead.
-    /// Both require a `BudgetMint` capability.
     pub(crate) fn new(micro_cents: u64) -> Result<Self, BudgetError> {
         let _: () = Self::_A2_HOLDS;
         if micro_cents > MAX {
@@ -90,20 +51,10 @@ impl<const MAX: u64> Budget<MAX> {
         Ok(Self { micro_cents })
     }
 
-    /// Mint a new `Budget` from a capability token.
-    ///
-    /// The `&BudgetMint` parameter is unused at runtime; its presence
-    /// is a compile-time proof that the caller possesses mint authority.
-    /// Acquiring a `BudgetMint` requires the `system-authority` Cargo
-    /// feature (enabled only in top-level binaries).
     pub fn mint(auth: &BudgetMint, micro_cents: u64) -> Result<Self, BudgetError> {
         Self::new_sealed(auth, micro_cents)
     }
 
-    /// Legacy alias for [`Budget::mint`].
-    ///
-    /// Retained for backward compatibility with v0.4 callers.
-    /// Prefer [`Budget::mint`] in new code; the paper uses that name.
     pub fn new_sealed(_auth: &CapAuthority, micro_cents: u64) -> Result<Self, BudgetError> {
         Self::new(micro_cents)
     }
@@ -147,10 +98,6 @@ impl<const MAX: u64> Budget<MAX> {
     }
 }
 
-// ============================================================================
-// Receipt / Refund: affine resources for reserve-confirm-refund
-// ============================================================================
-
 #[must_use = "Receipt must be consumed via confirm(), forfeit(), or refund_to()"]
 pub struct Receipt<const MAX: u64> {
     reserved: u64,
@@ -168,9 +115,7 @@ impl<const MAX: u64> Receipt<MAX> {
         Ok(Refund { amount: self.reserved - actual })
     }
 
-    pub fn forfeit(self) {
-        // Drop self; reserved amount stays debited from budget.
-    }
+    pub fn forfeit(self) { }
 }
 
 #[must_use = "Refund must be applied via apply_to() or it will be lost"]
@@ -204,10 +149,6 @@ impl<const MAX: u64> Budget<MAX> {
         ))
     }
 }
-
-// ============================================================================
-// BudgetPool: multi-tenant atomic reservation
-// ============================================================================
 
 #[derive(Clone)]
 pub struct BudgetPool {
@@ -271,9 +212,6 @@ impl BudgetPool {
     }
 }
 
-/// Atomic reservation handle. Move-only (no Clone). On Drop without
-/// commit/cancel, the reservation is forfeited (amount stays debited
-/// from the pool's available balance).
 pub struct Reservation {
     pool: BudgetPool,
     amount: u64,
@@ -317,10 +255,6 @@ impl Drop for Reservation {
         }
     }
 }
-
-// ============================================================================
-// StreamingReceipt: per-chunk refund
-// ============================================================================
 
 pub struct StreamingReceipt<const MAX: u64> {
     initial_reserved: u64,
@@ -376,10 +310,6 @@ impl<const MAX: u64> Budget<MAX> {
     }
 }
 
-// ============================================================================
-// ReasoningProvider: o1 / DeepSeek-R1 hidden-token handling
-// ============================================================================
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ReasoningProvider {
     OpenAIO1 { per_call_reasoning_p99_uc: u64 },
@@ -410,19 +340,10 @@ impl<const MAX: u64> Budget<MAX> {
     }
 }
 
-// ============================================================================
-// Tests
-// ============================================================================
-
 #[cfg(test)]
 mod tests {
     use super::*;
     type B = Budget<1_000_000>;
-
-    // Internal tests use `Budget::new` directly because they live inside
-    // the `token_budgets` crate (where `new` is `pub(crate)`). External
-    // tests in `tests/` and examples in `examples/` must use
-    // `Budget::mint(&BudgetMint, ...)` with the `system-authority` feature.
 
     #[test]
     fn basic_construction() {
@@ -507,7 +428,6 @@ mod tests {
 
     #[test]
     fn budget_error_is_std_error() {
-        // Compile-time check: BudgetError implements std::error::Error
         fn assert_error<E: std::error::Error>() {}
         assert_error::<BudgetError>();
     }

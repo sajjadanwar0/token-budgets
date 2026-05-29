@@ -1,12 +1,3 @@
-//! cargo-verify-authority — verify that the operator-controlled
-//! .token_budgets_authority.toml allowlist is consistent with the
-//! workspace's current Cargo.lock.
-//!
-//! Run as: cargo verify-authority
-//!
-//! Exits 0 if the allowlist is consistent and all activators in
-//! Cargo.lock are allowlisted. Exits non-zero on any inconsistency.
-
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use std::fs;

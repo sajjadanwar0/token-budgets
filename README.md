@@ -160,7 +160,3 @@ Acknowledged in the paper, not pretended away:
 ## License
 
 Dual MIT/Apache-2.0. See `LICENSE-MIT` and `LICENSE-APACHE`.
-
-## Contact
-
-Sajjad Khan — sajjadanwar200@gmail.com

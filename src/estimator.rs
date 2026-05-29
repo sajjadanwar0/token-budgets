@@ -1,24 +1,3 @@
-//! TokenEstimator trait + ByteLength / Tiktoken / Anthropic implementations.
-//!
-//! Drop into budget-typed-cap/src/estimator.rs and re-export from lib.rs.
-//! Add to call_with_budget signature as a generic parameter (or as a
-//! trait-object &dyn TokenEstimator if the operator wants late binding).
-//!
-//! Cargo.toml addition:
-//!   [features]
-//!   tiktoken = ["dep:tiktoken-rs"]
-//!   [dependencies]
-//!   tiktoken-rs = { version = "0.5", optional = true }
-
-/// Sound estimator interface for input-token counts.
-///
-/// The cap-soundness contract requires:
-///   self.estimate(p) >= tokenizer.encode(p).len()
-/// for every prompt p the operator may submit. The byte-length default
-/// (ByteLength) satisfies this for any BPE tokenizer; tokenizer-direct
-/// implementations satisfy it for the specific tokenizer they wrap, with
-/// the caveat that provider-side tokenizer rotation can violate the
-/// contract if the implementation is not pinned.
 pub trait TokenEstimator: Send + Sync {
     fn estimate(&self, prompt: &str) -> u64;
 
@@ -28,10 +7,6 @@ pub trait TokenEstimator: Send + Sync {
     }
 }
 
-/// Conservative default: UTF-8 byte count.
-///
-/// Sound for any BPE-family tokenizer. Loose: median over-reservation
-/// approximately 6.4x across our tested provider/model combinations.
 pub struct ByteLength;
 
 impl TokenEstimator for ByteLength {
@@ -43,17 +18,6 @@ impl TokenEstimator for ByteLength {
     }
 }
 
-/// Tokenizer-direct estimator using tiktoken-rs.
-///
-/// Tighter than byte-length: median over-reservation expected to drop
-/// from ~6.4x to ~1.4x for OpenAI-family models.
-///
-/// SOUNDNESS NOTE: this is only sound while the wrapped tokenizer
-/// matches the provider's actual tokenizer at request time. If the
-/// provider rotates the tokenizer without bumping tiktoken-rs, this
-/// estimator may under-count and break cap-soundness. Operators using
-/// this estimator MUST pin both the model and the tokenizer library
-/// version, and re-validate after any provider model update.
 #[cfg(feature = "tiktoken")]
 pub struct Tiktoken {
     bpe: tiktoken_rs::CoreBPE,
