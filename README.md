@@ -2,9 +2,9 @@
 
 Compile-time affine typing for LLM cost caps in Rust. The main library crate.
 
-This is the implementation accompanying the paper *Token Budgets: A Rust Affine
-Primitive for LLM Agent Cost Caps, with an Empirical Catalogue of 63 Production
-Incidents* (preprint, 2026).
+This is the implementation accompanying the paper *Token Budgets: An Empirical
+Catalog of 63 LLM-Agent Budget-Overrun Incidents, with an Affine-Typed Rust
+Mitigation as a Case Study* (preprint, 2026).
 
 ## What this crate gives you
 
@@ -149,8 +149,8 @@ Acknowledged in the paper, not pretended away:
 ```bibtex
 @unpublished{khan2026tokenbudgets,
   author = {Khan, Sajjad},
-  title  = {Token Budgets: A Rust Affine Primitive for LLM Agent Cost Caps,
-            with an Empirical Catalogue of 63 Production Incidents},
+  title  = {Token Budgets: An Empirical Catalog of 63 LLM-Agent Budget-Overrun
+            Incidents, with an Affine-Typed Rust Mitigation as a Case Study},
   year   = {2026},
   note   = {Preprint. Reproduction artifact at
             \url{https://github.com/sajjadanwar0/token-budgets}.}
@@ -163,4 +163,4 @@ Dual MIT/Apache-2.0. See `LICENSE-MIT` and `LICENSE-APACHE`.
 
 ## Contact
 
-Sajjad Khan — sajjadanwar200@gmail.com — https://sajjadanwar.io
+Sajjad Khan — sajjadanwar200@gmail.com
