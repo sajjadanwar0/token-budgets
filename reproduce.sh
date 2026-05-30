@@ -3,15 +3,16 @@
 #
 # What this script does:
 #   1. Clones the token-budgets repositories from GitHub
-#   2. Verifies the 16 artifact-level claims that back the paper
+#   2. Verifies the 17 artifact-level claims that back the paper
 #   3. Compiles the formal proofs (Coq, Dafny, optional Verus)
 #   4. Runs the offline microbenchmarks (no API keys needed)
 #   5. Optionally runs the live-API replication (requires API keys)
 #
 # NOTE: this script audits GitHub HEAD. If you have just cleaned/edited the
 # artifact locally, push those changes first (in particular the
-# forbid(unsafe_code) lint in Cargo.toml and docs/trust-boundary.md), or the
-# corresponding checks will report against the un-pushed tree.
+# forbid(unsafe_code) lint in Cargo.toml, docs/trust-boundary.md, and the
+# primary_cluster column in data/catalogue.csv), or the corresponding checks
+# will report against the un-pushed tree.
 #
 # Usage:
 #   ./reproduce.sh                  # offline replication only (~10 min)
@@ -92,9 +93,9 @@ for repo in "${REPOS[@]}"; do
 done
 
 # ---------------------------------------------------------------------------
-# Phase 3: Artifact-level audit (15 claims)
+# Phase 3: Artifact-level audit (17 paper-backing claims)
 # ---------------------------------------------------------------------------
-log "Phase 3: Artifact-level audit (15 paper-backing claims)"
+log "Phase 3: Artifact-level audit (17 paper-backing claims)"
 
 # 1. Catalog has 110 retained rows (keyed on the label column, the source of truth)
 N=$(python3 -c "
@@ -104,6 +105,32 @@ with open('$ROOT/token-budgets/data/catalogue.csv', newline='') as f:
 print(sum(1 for r in rows if r.get('label','').strip() in {'bf','bu','mf','fr'}))
 ")
 [[ "$N" == "110" ]] && ok "Catalog: 110 retained rows (bf/bu/mf/fr)" || fail "Catalog: expected 110, got $N"
+
+# 1b. Cluster taxonomy re-derives from the primary_cluster column (paper §2.5).
+#     The eight clusters partition all 110 retained rows; counts must match the
+#     figures printed in §2.5. This is what makes the "re-derivable from
+#     catalogue.csv" reproducibility claim machine-checked rather than asserted.
+CLUSTERS_OK=$(python3 -c "
+import csv, collections, sys
+path='$ROOT/token-budgets/data/catalogue.csv'
+rows=[r for r in csv.DictReader(open(path, newline='', encoding='utf-8-sig'))
+      if r.get('label','').strip() in {'bf','bu','mf','fr'}]
+if not rows or 'primary_cluster' not in rows[0].keys():
+    print('NO_COLUMN'); sys.exit()
+d=collections.Counter(r['primary_cluster'].strip() for r in rows)
+expect={'M-retry-loop':27,'M-cost-observability':22,'M-context-amplification':13,
+        'M-storage-amplification':13,'M-budget-primitive-missing':12,
+        'M-delegation-fanout':11,'providerOptions-silently-dropped':6,
+        'M-multimodal-cost-amplification':6}
+print('OK' if dict(d)==expect and sum(d.values())==110 else 'MISMATCH:'+str(dict(d)))
+")
+if [[ "$CLUSTERS_OK" == "OK" ]]; then
+    ok "Clusters: 8-cluster taxonomy re-derives from primary_cluster (27/22/13/13/12/11/6/6 = 110)"
+elif [[ "$CLUSTERS_OK" == "NO_COLUMN" ]]; then
+    fail "Clusters: data/catalogue.csv has no primary_cluster column (commit catalogue_with_primary_cluster.csv)"
+else
+    fail "Clusters: per-cluster counts do not match paper §2.5 -> $CLUSTERS_OK"
+fi
 
 # 2. a1_validation.json est_ratio_mean = 1.87
 MEAN=$(python3 -c "
