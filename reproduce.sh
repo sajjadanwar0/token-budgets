@@ -316,16 +316,17 @@ fi
 log "Phase 5: Build and test Rust crate"
 cd "$ROOT/token-budgets"
 log "  cargo build --release  (also exercises the forbid(unsafe_code) lint)"
-cargo build --release --quiet 2>&1 | tail -5 || fail "cargo build failed"
-ok "cargo build successful"
+if cargo build --release --quiet 2>&1 | tail -5; then ok "cargo build successful"; else fail "cargo build failed"; fi
 
 log "  cargo test --release (unit + integration)"
-cargo test --release --quiet 2>&1 | tail -10 || fail "cargo test failed"
-ok "cargo test successful"
+if cargo test --release --quiet 2>&1 | tail -10; then ok "cargo test successful"; else fail "cargo test failed"; fi
 
 log "  cargo test --features system-authority --test compile_fail (trybuild)"
-cargo test --release --features system-authority --test compile_fail --quiet 2>&1 | tail -10 || fail "trybuild tests failed"
-ok "trybuild tests passed"
+if cargo test --release --features system-authority --test compile_fail --quiet 2>&1 | tail -10; then
+    ok "trybuild tests passed"
+else
+    fail "trybuild tests failed — likely .stderr snapshot drift vs your rustc; regenerate with: TRYBUILD=overwrite cargo test --features system-authority --test compile_fail"
+fi
 
 # ---------------------------------------------------------------------------
 # Phase 6: Microbenchmarks

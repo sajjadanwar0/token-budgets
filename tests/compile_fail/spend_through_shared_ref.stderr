@@ -1,13 +1,13 @@
 error[E0507]: cannot move out of `self.budget` which is behind a shared reference
-  --> tests/compile_fail/spend_through_shared_ref.rs:29:15
-   |
-29 |         match self.budget.spend(amount) {
-   |               ^^^^^^^^^^^ ------------- `self.budget` moved due to this method call
-   |               |
-   |               move occurs because `self.budget` has type `Budget<10000>`, which does not implement the `Copy` trait
-   |
+ --> tests/compile_fail/spend_through_shared_ref.rs:9:15
+  |
+9 |         match self.budget.spend(amount) {
+  |               ^^^^^^^^^^^ ------------- `self.budget` moved due to this method call
+  |               |
+  |               move occurs because `self.budget` has type `Budget<10000>`, which does not implement the `Copy` trait
+  |
 note: `Budget::<MAX>::spend` takes ownership of the receiver `self`, which moves `self.budget`
-  --> src/lib.rs
-   |
-   |     pub fn spend(self, amount: u64) -> Result<Self, BudgetError> {
-   |                  ^^^^
+ --> src/lib.rs
+  |
+  |     pub fn spend(self, amount: u64) -> Result<Self, BudgetError> {
+  |                  ^^^^

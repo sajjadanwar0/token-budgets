@@ -1,13 +1,11 @@
 error[E0505]: cannot move out of `budget` because it is borrowed
-  --> tests/compile_fail/borrow_after_split.rs:24:25
-   |
-20 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
-   |         ------ binding `budget` declared here
-21 |     let snapshot_ref = &budget;
-   |                        ------- borrow of `budget` occurs here
-...
-24 |     let (taken, kept) = budget.split(200).unwrap();
-   |                         ^^^^^^ move out of `budget` occurs here
-...
-28 |     println!("snapshot: {}", snapshot_ref.micro_cents());
-   |                              ------------ borrow later used here
+ --> tests/compile_fail/borrow_after_split.rs:6:25
+  |
+4 |     let budget = { let mint = BudgetMint::take_authority(); Budget::<10000>::mint(&mint, 500) }.unwrap();
+  |         ------ binding `budget` declared here
+5 |     let snapshot_ref = &budget;
+  |                        ------- borrow of `budget` occurs here
+6 |     let (taken, kept) = budget.split(200).unwrap();
+  |                         ^^^^^^ move out of `budget` occurs here
+7 |     println!("snapshot: {}", snapshot_ref.micro_cents());
+  |                              ------------ borrow later used here

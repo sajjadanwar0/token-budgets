@@ -1,10 +1,10 @@
 error[E0624]: associated function `new` is private
-  --> tests/compile_fail/budget_mint_required.rs:23:40
-   |
-23 |     let _budget = Budget::<1_000_000>::new(1_000_000);
-   |                                        ^^^ private associated function
-   |
-  ::: src/lib.rs
-   |
-   |     pub(crate) fn new(micro_cents: u64) -> Result<Self, BudgetError> {
-   |     ---------------------------------------------------------------- private associated function defined here
+ --> tests/compile_fail/budget_mint_required.rs:4:40
+  |
+4 |     let _budget = Budget::<1_000_000>::new(1_000_000);
+  |                                        ^^^ private associated function
+  |
+ ::: src/lib.rs
+  |
+  |     pub(crate) fn new(micro_cents: u64) -> Result<Self, BudgetError> {
+  |     ---------------------------------------------------------------- private associated function defined here
