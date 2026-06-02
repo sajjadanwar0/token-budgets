@@ -74,7 +74,7 @@ bash reproduce.sh --formal-only   # only verify formal proofs (~5 min)
 
 `reproduce.sh` audits the paper-backing artifact claims — catalogue size and the
 8-cluster counts, A1 calibration (est-ratio 1.87), the four-class IRR
-(kappa = 0.837, N = 113) **and** the exploratory cluster IRR (kappa = 0.4440,
+(kappa = 0.837, N = 113) **and** the exploratory cluster IRR (kappa = 0.44,
 N = 110), the trybuild rustc-code coverage, the over-reservation factor (6.20x),
 crate hygiene, and `forbid(unsafe_code)` — then compiles the formal proofs
 (Coq/Dafny; Verus optional), runs the offline microbenchmarks and the Loom
