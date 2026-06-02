@@ -7,6 +7,9 @@
 #   3. Compiles the formal proofs (Coq, Dafny, optional Verus)
 #   4. Runs the offline microbenchmarks (no API keys needed)
 #   5. Optionally runs the live-API replication (requires API keys)
+#   6. Reproduces the N=1 deployment crate token-budgets-rig (Rig + AutoAgents):
+#      offline cap-enforcement + compile-time non-bypassability always; the
+#      live Rig/AutoAgents examples run under --with-live
 #
 # NOTE: this script audits GitHub HEAD. If you have just cleaned/edited the
 # artifact locally, push those changes first (in particular the
@@ -25,6 +28,11 @@
 #   - rustc 1.93+ (https://rustup.rs/)
 #   - Coq 8.18+ (apt install coq OR brew install coq) — only if --formal-only or default
 #   - Optional: Verus (https://github.com/verus-lang/verus) — for source-level verification
+#   - Optional: token-budgets-rig (the N=1 deployment crate). Auto-cloned if
+#     present on GitHub, or point at a local checkout with
+#       export RIG_DIR=/path/to/token-budgets-rig
+#     The autoagents_fanout example also needs openssl + pkg-config
+#     (Debian/Ubuntu: apt install pkg-config libssl-dev).
 #
 # For --with-live, also set:
 #   export ANTHROPIC_API_KEY=sk-ant-...
@@ -239,6 +247,31 @@ else
     fi
 fi
 
+# 14b. Cluster-assignment IRR (EXPLORATORY) reproduces kappa~0.44
+#      (paper abstract / guarantee map / methodology / limitations).
+# INTEGRITY NOTE: this reproduces a FIXED historical measurement between two
+# INDEPENDENT codings. It must run against FROZEN snapshots of rater A's
+# original cluster labels and rater B's blind cluster labels --- NOT against the
+# live data/catalogue.csv, whose primary_cluster column may later be corrected
+# via adjudication. Recomputing against a corrected catalogue would yield a
+# different (higher) number and would not be the reported reliability.
+CIRR_DIR="${CLUSTER_IRR_DIR:-$ROOT/token-budgets-formals/irr/cluster}"
+CIRR_SCRIPT="$CIRR_DIR/compute_cluster_kappa.py"
+CIRR_A="${CLUSTER_RATER_A:-$CIRR_DIR/cluster_irr_rater_a_frozen.csv}"   # rater A original cluster labels (issue_id, primary_cluster)
+CIRR_B="${CLUSTER_RATER_B:-$CIRR_DIR/cluster_irr_rater_b_frozen.csv}"   # rater B blind cluster labels
+if [[ -f "$CIRR_SCRIPT" && -f "$CIRR_A" && -f "$CIRR_B" ]]; then
+    CIRR_OUT=$(python3 "$CIRR_SCRIPT" "$CIRR_A" "$CIRR_B" 2>&1)
+    CIRR_K=$(echo "$CIRR_OUT" | grep -oiE "Cohen.s kappa:\s*[0-9.]+" | head -1 | grep -oE "[0-9.]+" || echo "?")
+    if echo "$CIRR_K" | grep -qE "^0\.44"; then
+        ok "Cluster IRR (exploratory): kappa=$CIRR_K from frozen independent codings (paper reports ~0.44; cost-observability 0.78 and multimodal 0.65 reliable)"
+    else
+        fail "Cluster IRR: expected kappa~0.44 from frozen codings; got kappa=$CIRR_K"
+    fi
+else
+    log "  Cluster IRR (exploratory): frozen codings or compute_cluster_kappa.py not found in $CIRR_DIR; skipping"
+    log "  (to reproduce the paper's kappa=0.44, push compute_cluster_kappa.py plus the two FROZEN independent cluster codings; do not point this at the live catalogue.csv)"
+fi
+
 # 15. forbid(unsafe_code) enforced at crate level (paper §1.1 / Table 1 / Table 2)
 if grep -qE 'unsafe_code[[:space:]]*=[[:space:]]*"forbid"' "$ROOT/token-budgets/Cargo.toml" 2>/dev/null \
    || grep -qE '#!\[forbid\(unsafe_code\)\]' "$ROOT/token-budgets/src/lib.rs" 2>/dev/null; then
@@ -329,9 +362,45 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# Phase 5b: N=1 deployment crate (token-budgets-rig) — Rig + AutoAgents
+# ---------------------------------------------------------------------------
+# The budget layer is framework-independent (it wraps a closure), so the cap
+# and the compile-time non-bypassability hold the same way across Rig
+# (async-task) and AutoAgents (actor-model). The checks below are OFFLINE:
+# no API key, no live API calls, deterministic. token-budgets-rig is OPTIONAL — set
+# RIG_DIR=/path/to/token-budgets-rig for a local checkout, else we try to clone.
+log "Phase 5b: N=1 deployment crate (token-budgets-rig)"
+RIG_DIR="${RIG_DIR:-$ROOT/token-budgets-rig}"
+if [[ ! -d "$RIG_DIR" ]]; then
+    if (cd "$ROOT" && git clone --quiet --depth=1 "https://github.com/$GITHUB_USER/token-budgets-rig.git") 2>/dev/null; then
+        log "  cloned token-budgets-rig"
+    else
+        log "  token-budgets-rig not on GitHub and \$RIG_DIR unset; skipping deployment reproduction"
+        log "  (set RIG_DIR=/path/to/token-budgets-rig to run it)"
+    fi
+fi
+if [[ -d "$RIG_DIR" ]]; then
+    cd "$RIG_DIR"
+    log "  cargo test --test cap_enforced --test fanout_cap  (offline: cap held, no API key needed)"
+    if cargo test --release --test cap_enforced --test fanout_cap --quiet 2>&1 | tail -10; then
+        ok "deployment cap-enforcement reproduced (single-agent + 8 concurrent sub-agents)"
+    else
+        fail "deployment cap-enforcement tests failed"
+    fi
+    log "  cargo test --test affine_reservation  (trybuild: Reservation no-Clone E0599 / no-reuse E0382)"
+    if cargo test --release --test affine_reservation --quiet 2>&1 | tail -10; then
+        ok "compile-time non-bypassability reproduced (a sub-agent cannot clone/reuse its slice)"
+    else
+        fail "trybuild .stderr drift vs your rustc; regenerate with: TRYBUILD=overwrite cargo test --test affine_reservation"
+    fi
+    cd "$ROOT"
+fi
+
+# ---------------------------------------------------------------------------
 # Phase 6: Microbenchmarks
 # ---------------------------------------------------------------------------
 log "Phase 6: Criterion microbenchmarks"
+cd "$ROOT/token-budgets"
 log "  cargo bench --bench spend_bench --features system-authority (observed ~1.15 ns; paper claims <200 ns)"
 if cargo bench --bench spend_bench --features system-authority --quiet >/tmp/_mb.log 2>&1; then
     grep -E "spend|time:" /tmp/_mb.log | head -5 || true
@@ -385,6 +454,34 @@ if [[ $LIVE_MODE -eq 1 ]]; then
         || fail "multi-runtime sweep failed"
     ok "Live multi-runtime sweep complete (live_rerun_anthropic.csv)"
     deactivate
+
+    # --- N=1 deployment, live (token-budgets-rig): Rig + AutoAgents ---
+    RIG_DIR="${RIG_DIR:-$ROOT/token-budgets-rig}"
+    if [[ -d "$RIG_DIR" ]]; then
+        cd "$RIG_DIR"
+        for ex in delegation_demo fanout_demo workload_multiturn; do
+            log "  rig live: $ex (Rig async-task; a few cents)"
+            if cargo run --release --example "$ex" 2>&1 | tee "/tmp/_rig_$ex.log" | tail -4; then
+                grep -q "CAP RESPECTED" "/tmp/_rig_$ex.log" \
+                    && ok "rig $ex: spend held under the session cap" \
+                    || fail "rig $ex: 'CAP RESPECTED' line not found"
+            else
+                fail "rig $ex failed (check ANTHROPIC_API_KEY / network)"
+            fi
+        done
+        log "  autoagents_fanout (2nd framework, actor-model; needs anthropic feature + openssl/pkg-config; ~\$0.04)"
+        if cargo run --release --example autoagents_fanout 2>&1 | tee /tmp/_rig_aa.log | tail -8; then
+            grep -q "CAP RESPECTED ACROSS ALL AGENTS" /tmp/_rig_aa.log \
+                && ok "autoagents_fanout: one shared cap held across concurrent actor-model agents" \
+                || fail "autoagents_fanout: cap line not found"
+        else
+            fail "autoagents_fanout failed (autoagents API drift or missing system libs)"
+        fi
+        cd "$ROOT"
+    else
+        log "  (token-budgets-rig absent; skipping live deployment cells)"
+    fi
+
     cd "$ROOT"
 fi
 

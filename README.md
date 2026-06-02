@@ -62,7 +62,7 @@ let for_call = for_call.spend(response.tokens_used)?; // returns the remaining B
 
 ## Reproducibility
 
-This repository ships `reproduce.sh`. The anonymised artifact bundles all five
+This repository ships `reproduce.sh`. The anonymised artifact bundles the
 component directories as siblings of the script (no network or GitHub account
 required):
 
@@ -72,11 +72,15 @@ bash reproduce.sh --with-live     # also run live-API cells (~$0.50, 30 min)
 bash reproduce.sh --formal-only   # only verify formal proofs (~5 min)
 ```
 
-`reproduce.sh` audits **20 paper-backing claims** (catalogue size, A1 calibration,
-the IRR κ, the trybuild rustc-code coverage, the Forgetful-Operator Condition-E
-result, the A7 fault-injection table, and more), compiles the formal proofs
-(Coq/Dafny; Verus optional), runs the offline microbenchmarks, and optionally
-runs the live-API replication. Live-API smoke-test cost is under $0.005.
+`reproduce.sh` audits the paper-backing artifact claims — catalogue size and the
+8-cluster counts, A1 calibration (est-ratio 1.87), the four-class IRR
+(kappa = 0.837, N = 113) **and** the exploratory cluster IRR (kappa = 0.4440,
+N = 110), the trybuild rustc-code coverage, the over-reservation factor (6.20x),
+crate hygiene, and `forbid(unsafe_code)` — then compiles the formal proofs
+(Coq/Dafny; Verus optional), runs the offline microbenchmarks and the Loom
+interleavings, reproduces the N=1 deployment crate (Rig + AutoAgents), and
+optionally runs the live-API replication. Live-API smoke-test cost is under
+$0.005.
 
 ## Microbenchmarks
 
@@ -117,16 +121,23 @@ RUSTFLAGS="--cfg loom" LOOM_MAX_PREEMPTIONS=4 \
 
 ## Companion components (single artifact bundle)
 
-The replication artifact is organised as five sibling directories:
+The replication artifact is organised as sibling directories:
 
 - `token-budgets` — main library and the 110-row catalogue (`data/catalogue.csv`).
 - `token-budgets-formals` — formal verification (Verus 66 obligations; TLAPS 497
   obligations; TLC 252 states at B0=5; Coq and Dafny re-encodings) plus the IRR
-  package (codebook v1.0, blinded coding sheets, **κ = 0.837 on N = 113**).
+  package: the four-class study (codebook v1, blinded coding sheets,
+  **kappa = 0.837 on N = 113**) and the exploratory cluster-assignment IRR
+  (**kappa = 0.44**, see `irr/cluster/`).
 - `token-budgets-experiments` — multi-runtime evaluation harness, refund-live
   results, A1 calibration, A7 fault injection.
 - `token-budgets-python` — runtime-only Python port (no compile-time guarantees).
 - `token-budgets-extensions` — adaptive estimator and Verus skeleton.
+- `token-budgets-baseline` — neutral-cohort baseline material.
+
+The N=1 deployment crate (`token-budgets-rig`, Rig + AutoAgents) is reproduced by
+`reproduce.sh` Phase 5b; it is optional (auto-cloned, or point at a local
+checkout with `RIG_DIR`).
 
 ## Known issues
 
@@ -140,6 +151,8 @@ Acknowledged in the paper, not pretended away:
 - **Assumption A1** (UTF-8 byte-length dominance) is calibrated with a 2.0×
   margin, not formally proven. The margin is load-bearing: at margin 1.0, A1
   holds on 1/3 of the audited classes; at margin 2.0, A1 holds 30/30.
+- **The eight-cluster mechanism taxonomy is exploratory** (cluster-assignment
+  kappa = 0.44); the validated labeling is the four-class scheme (kappa = 0.837).
 - **Loom fresh rebuild** can hit a tokio + loom feature-gate incompatibility;
   the shipped `loom_run*.log` files are the authoritative artifact for the
   interleavings claim.
