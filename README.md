@@ -1,175 +1,136 @@
-# token-budgets
+# Token Budgets
 
-Compile-time affine typing for LLM cost caps in Rust. The main library crate.
+[![arXiv](https://img.shields.io/badge/arXiv-2606.04056-b31b1b.svg)](https://arxiv.org/abs/2606.04056)
+[![DOI](https://img.shields.io/badge/DOI-10.48550%2FarXiv.2606.04056-blue.svg)](https://doi.org/10.48550/arXiv.2606.04056)
+[![Rust](https://img.shields.io/badge/rust-no__unsafe-orange.svg)](https://github.com/sajjadanwar0/token-budgets)
 
-This is the implementation accompanying the paper *Token Budgets: An Empirical
-Catalog of 63 LLM-Agent Budget-Overrun Incidents, with an Affine-Typed Rust
-Mitigation as a Case Study* (preprint, 2026).
+> **Paper:** Sajjad Khan, *Token Budgets: An Empirical Catalog of 63 LLM-Agent
+> Budget-Overrun Incidents, with an Affine-Typed Rust Mitigation as a Case
+> Study*, arXiv:2606.04056 [cs.SE], 2026. <https://arxiv.org/abs/2606.04056>
 
-## What this crate gives you
+Primary artifact for the paper: the **empirical catalog** of LLM-agent
+budget-overrun incidents and **`token-budgets`**, a small Rust crate that makes
+budget misuse a *compile error* rather than a runtime hazard.
 
-A `Budget` type that you cannot duplicate, cannot use twice, and cannot exceed:
+## The problem
 
-```rust
-use token_budgets::{Budget, BudgetError, BudgetMint};
+LLM-agent budget overruns are a documented production failure class — a single
+retry loop can spend thousands of dollars before an operator notices. The
+in-process integrity properties that would prevent it (no aliasing, no
+double-spend, no use-after-delegation of a cost-bearing value) are usually
+enforced, if at all, by ad-hoc wrappers rather than by the type system.
 
-// Construction is gated behind the `system-authority` feature (see Cargo.toml).
+## The empirical contribution
 
-let mint = BudgetMint::take_authority();
-let b: Budget = Budget::new(&mint, 1000)?;   // cap of 1000 micro-cents
+A catalog of **63 confirmed production incidents** from **21 orchestration
+frameworks** (2023–2026), each backed by a quoted GitHub issue and, where
+reported, a dollar loss — organized into an **eight-cluster failure taxonomy**
+(inter-rater Cohen's kappa = 0.837, N = 113), plus **47 supplementary
+structural entries** (110 catalog rows total).
 
-let (parent, child) = b.split(400)?;         // two budgets summing to 1000
-let parent = parent.spend(350)?;             // consume 350; returns remainder Budget
-// let _ = parent.spend(100)?;               // would ALSO move `parent`;
-//                                           // the prior binding is gone (E0382)
+| Cluster | Count |
+| --- | --- |
+| M-retry-loop | 27 |
+| M-cost-observability | 22 |
+| M-context-amplification | 13 |
+| M-storage-amplification | 13 |
+| M-budget-primitive-missing | 12 |
+| M-delegation-fanout | 11 |
+| providerOptions-silently-dropped | 6 |
+| M-multimodal-cost-amplification | 6 |
+
+The catalog lives in `data/catalogue.csv` (label column `bf/bu/mf/fr`;
+`primary_cluster` column re-derives the taxonomy above).
+
+## The mitigation: `token-budgets`
+
+A ~1,180-line Rust crate (built under `#![forbid(unsafe_code)]`) that
+operationalizes **affine ownership** for a cost-bearing `Budget` value:
+
+- cloning a `Budget`,
+- double-spending it, or
+- using it after delegating it
+
+are **compile errors**, caught by the borrow checker, not runtime hazards an
+operator has to remember to avoid. The dollar cap itself is runtime arithmetic
+under an estimator assumption; the affine layer is what makes that arithmetic
+**non-bypassable**.
+
+### What the evaluation shows
+
+- **Single-agent:** a 4-line Python counter matches the crate (0/30 overshoot),
+  so the distinguishing value is *non-bypassability under operator error in
+  multi-agent delegation*.
+- **Multi-agent delegation:** the delegation-fanout race documented in 11
+  incidents is rejected at compile time; the same pattern under `asyncio`
+  overshoots 30/30, while three disciplined alternatives overshoot 0/30.
+- **Live API:** across five runtimes, three providers, and a
+  temperature-stratified test (N = 160), zero cap violations and zero false
+  refusals, at operational parity with concurrent work.
+- **Cost:** static over-reservation is 4–6x (2.11x adaptive).
+- **Open:** binary-level cap-soundness on the running binary is left open.
+
+## Layout
+
+```
+token-budgets/
+├── src/                         # the affine Budget crate (no unsafe)
+├── benches/                     # Criterion microbenchmarks (~1.15 ns/op)
+├── tests/
+│   ├── compile_fail/            # trybuild: misuse must NOT compile (>=7 rustc codes)
+│   └── loom_concurrent.rs       # loom exhaustive interleaving
+├── data/
+│   └── catalogue.csv            # the 110-row incident catalog + taxonomy
+├── docs/
+│   └── trust-boundary.md        # where the estimator/cap assumptions sit
+├── tooling/
+│   └── cargo-verify-authority/  # authority-file verification skeleton
+├── .token_budgets_authority.toml.example
+├── Cargo.toml
+└── Cargo.lock
 ```
 
-> **Note**: `Budget::new` is gated behind the `BudgetMint` capability token
-> (constructed via `BudgetMint::take_authority()`), itself behind the
-> `system-authority` Cargo feature. See `docs/trust-boundary.md` for the threat
-> model.
-
-The type system enforces that:
-
-- A `Budget` cannot be cloned (no `Clone` impl). Once consumed, it's gone.
-- Sub-budgets sum to the parent (`split` and `merge` are conservation laws).
-- `spend(amount)` consumes `self` and returns a **new** `Budget` carrying the
-  remainder; the prior binding is moved and cannot be used again. A separate
-  `spend_with_receipt(amount)` returns a `ReservationReceipt` for the
-  reserve-then-reconcile refund path.
-- A pool with reservations cannot oversubscribe (`Pool` typestate machine).
-
-This sits one layer below `tokio` and one layer above your model client.
-
-## Quick start
-
-```toml
-[dependencies]
-token-budgets = "0.5"
-```
-
-```rust
-use token_budgets::{Budget, BudgetMint, AnthropicEstimator, TokenEstimator};
-
-let mint = BudgetMint::take_authority();
-let budget: Budget = Budget::new(&mint, 5000)?;
-let estimator = AnthropicEstimator::default();      // 2.0x margin (load-bearing; paper §5.30)
-let estimate = estimator.estimate(&prompt);
-let (for_call, remaining) = budget.split(estimate)?;
-let response = call_model(prompt, &for_call).await?;
-let for_call = for_call.spend(response.tokens_used)?; // returns the remaining Budget
-```
-
-## Reproducibility
-
-This repository ships `reproduce.sh`. The anonymised artifact bundles the
-component directories as siblings of the script (no network or GitHub account
-required):
+## Build & test
 
 ```bash
-bash reproduce.sh                 # offline replication (~10 min)
-bash reproduce.sh --with-live     # also run live-API cells (~$0.50, 30 min)
-bash reproduce.sh --formal-only   # only verify formal proofs (~5 min)
+cargo build --release                 # builds under forbid(unsafe_code)
+cargo test  --release                 # unit + integration tests
+cargo test  --release --features system-authority --test compile_fail   # trybuild
+cargo bench --bench spend_bench --features system-authority             # ~1.15 ns/op
+RUSTFLAGS="--cfg loom" cargo test --release --features system-authority \
+    --target-dir target-loom --test loom_concurrent                     # loom
 ```
 
-`reproduce.sh` audits the paper-backing artifact claims — catalogue size and the
-8-cluster counts, A1 calibration (est-ratio 1.87), the four-class IRR
-(kappa = 0.837, N = 113) **and** the exploratory cluster IRR (kappa = 0.44,
-N = 110), the trybuild rustc-code coverage, the over-reservation factor (6.20x),
-crate hygiene, and `forbid(unsafe_code)` — then compiles the formal proofs
-(Coq/Dafny; Verus optional), runs the offline microbenchmarks and the Loom
-interleavings, reproduces the N=1 deployment crate (Rig + AutoAgents), and
-optionally runs the live-API replication. Live-API smoke-test cost is under
-$0.005.
+## Reproduction & related repos
 
-## Microbenchmarks
+The end-to-end reproduction (catalog audit, formal proofs, microbenchmarks,
+live-API replication) is driven by `reproduce.sh`. The artifact spans several
+repositories:
 
-```bash
-cargo bench --features system-authority --bench spend_bench
-```
-
-Operations on AMD Ryzen 7 PRO 6850U, Linux (Ubuntu), rustc 1.93.1 stable,
-release build, Criterion (median of 100 samples):
-
-| Operation             | Median time | 95% CI               |
-|-----------------------|-------------|----------------------|
-| `Budget::spend` (ok)  | 1.180 ns    | [1.177, 1.184] ns    |
-| `Budget::spend` (err) | 1.198 ns    | [1.190, 1.209] ns    |
-| `Budget::merge`       | 1.447 ns    | —                    |
-| `Budget::split`       | 4.836 ns    | —                    |
-
-Sub-2-ns figures are below the noise floor of a non-optimised call (LLVM
-partially folds even under `black_box`); the load-bearing claim is that
-per-operation overhead is negligible relative to LLM-API network latency
-(< 0.001%).
-
-## Loom interleaving evidence
-
-`tests/loom_concurrent.rs` exercises the concurrent split/merge/spend/Drop
-operations under Loom's exhaustive scheduler. At `LOOM_MAX_PREEMPTIONS=4`, Loom
-enumerates **5,966 distinct interleavings** with zero assertion failures
-(spot-checked at preemption 5, ~32k schedules, still zero). Loom is bounded
-model checking, not proof.
-
-To re-run:
-
-```bash
-RUSTFLAGS="--cfg loom" LOOM_MAX_PREEMPTIONS=4 \
-  cargo test --release --target-dir target-loom \
-  --features system-authority --test loom_concurrent
-```
-
-## Companion components (single artifact bundle)
-
-The replication artifact is organised as sibling directories:
-
-- `token-budgets` — main library and the 110-row catalogue (`data/catalogue.csv`).
-- `token-budgets-formals` — formal verification (Verus 66 obligations; TLAPS 497
-  obligations; TLC 252 states at B0=5; Coq and Dafny re-encodings) plus the IRR
-  package: the four-class study (codebook v1, blinded coding sheets,
-  **kappa = 0.837 on N = 113**) and the exploratory cluster-assignment IRR
-  (**kappa = 0.44**, see `irr/cluster/`).
-- `token-budgets-experiments` — multi-runtime evaluation harness, refund-live
-  results, A1 calibration, A7 fault injection.
-- `token-budgets-python` — runtime-only Python port (no compile-time guarantees).
-- `token-budgets-extensions` — adaptive estimator and Verus skeleton.
-- `token-budgets-baseline` — neutral-cohort baseline material.
-
-The N=1 deployment crate (`token-budgets-rig`, Rig + AutoAgents) is reproduced by
-`reproduce.sh` Phase 5b; it is optional (auto-cloned, or point at a local
-checkout with `RIG_DIR`).
-
-## Known issues
-
-Acknowledged in the paper, not pretended away:
-
-- **Conjecture 1** (binary-level cap-soundness on the running Tokio binary) is
-  **open**. The abstract-machine cap-soundness is cross-checked by TLAPS (497
-  obligations) and TLC, with a preliminary Verus source-level mechanisation (66
-  obligations, 0 errors). Closing Conjecture 1 is an estimated ~12 person-months
-  of Iris/RustBelt work.
-- **Assumption A1** (UTF-8 byte-length dominance) is calibrated with a 2.0×
-  margin, not formally proven. The margin is load-bearing: at margin 1.0, A1
-  holds on 1/3 of the audited classes; at margin 2.0, A1 holds 30/30.
-- **The eight-cluster mechanism taxonomy is exploratory** (cluster-assignment
-  kappa = 0.44); the validated labeling is the four-class scheme (kappa = 0.837).
-- **Loom fresh rebuild** can hit a tokio + loom feature-gate incompatibility;
-  the shipped `loom_run*.log` files are the authoritative artifact for the
-  interleavings claim.
+- [`token-budgets-formals`](https://github.com/sajjadanwar0/token-budgets-formals) — Coq / Dafny / Verus mechanization + inter-rater reliability
+- [`token-budgets-experiments`](https://github.com/sajjadanwar0/token-budgets-experiments) — estimator validation, over-reservation, multi-runtime sweeps
+- [`token-budgets-python`](https://github.com/sajjadanwar0/token-budgets-python) — Python `token_budgets` package
+- [`token-budgets-baseline`](https://github.com/sajjadanwar0/token-budgets-baseline) — baseline/control implementations
+- [`token-budgets-extensions`](https://github.com/sajjadanwar0/token-budgets-extensions) — framework adapters / capability catalog
+- [`token-budgets-rig`](https://github.com/sajjadanwar0/token-budgets-rig) — N=1 deployment case study (Rig + AutoAgents)
 
 ## Citation
 
 ```bibtex
-@unpublished{khan2026tokenbudgets,
-  author = {Khan, Sajjad},
-  title  = {Token Budgets: An Empirical Catalog of 63 LLM-Agent Budget-Overrun
-            Incidents, with an Affine-Typed Rust Mitigation as a Case Study},
-  year   = {2026},
-  note   = {Preprint. Reproduction artifact at
-            \url{https://github.com/sajjadanwar0/token-budgets}.}
+@misc{khan2026tokenbudgets,
+  title         = {Token Budgets: An Empirical Catalog of 63 LLM-Agent
+                   Budget-Overrun Incidents, with an Affine-Typed Rust
+                   Mitigation as a Case Study},
+  author        = {Khan, Sajjad},
+  year          = {2026},
+  eprint        = {2606.04056},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.SE},
+  doi           = {10.48550/arXiv.2606.04056},
+  url           = {https://arxiv.org/abs/2606.04056}
 }
 ```
 
 ## License
 
-Dual MIT/Apache-2.0. See `LICENSE-MIT` and `LICENSE-APACHE`.
+Paper: CC BY 4.0 (arXiv). Code: see the repository `LICENSE` file.
