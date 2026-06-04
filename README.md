@@ -74,20 +74,23 @@ under an estimator assumption; the affine layer is what makes that arithmetic
 
 ```
 token-budgets/
-├── src/                         # the affine Budget crate (no unsafe)
-├── benches/                     # Criterion microbenchmarks (~1.15 ns/op)
+├── src/                              # the affine Budget crate (no unsafe)
+├── benches/                          # Criterion microbenchmarks (spend_bench, ~1.15 ns/op)
 ├── tests/
-│   ├── compile_fail/            # trybuild: misuse must NOT compile (>=7 rustc codes)
-│   └── loom_concurrent.rs       # loom exhaustive interleaving
+│   ├── compile_fail/                 # trybuild: 9 cases, 7 rustc codes (E0277/E0308/
+│   │                                 #   E0382/E0505/E0507/E0599/E0624)
+│   └── loom_concurrent.rs            # loom exhaustive-interleaving tests
 ├── data/
-│   └── catalogue.csv            # the 110-row incident catalog + taxonomy
+│   └── catalogue.csv                 # the 110-row incident catalog (63 confirmed + 47 supplementary)
 ├── docs/
-│   └── trust-boundary.md        # where the estimator/cap assumptions sit
+│   └── trust-boundary.md             # what Budget::new trusts; the A1/A2/A6/A7 assumptions
 ├── tooling/
-│   └── cargo-verify-authority/  # authority-file verification skeleton
+│   └── cargo-verify-authority/       # checks the Budget::new capability allowlist
 ├── .token_budgets_authority.toml.example
-├── Cargo.toml
-└── Cargo.lock
+├── Cargo.toml                        # `system-authority` feature gates the trybuild suite
+├── Cargo.lock
+├── reproduce.sh                      # one-command reproduction of the paper's artifact claims
+└── README.md
 ```
 
 ## Build & test
