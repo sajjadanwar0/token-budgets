@@ -104,7 +104,24 @@ RUSTFLAGS="--cfg loom" cargo test --release --features system-authority \
     --target-dir target-loom --test loom_concurrent                     # loom
 ```
 
-## Reproduction & related repos
+## Reproducing the paper
+
+`reproduce.sh` is the single entry point. It clones the companion repos see Related repos, audits
+the artifact-level claims, builds the formal proofs, and runs the offline
+benchmarks; live-API cells are opt-in.
+
+```bash
+./reproduce.sh                  # offline replication (~10 min, no API keys)
+./reproduce.sh --with-live      # also run live-API cells (~$0.50, ~30 min)
+./reproduce.sh --formal-only    # only the formal proofs (~5 min)
+```
+
+Requirements: `git`, `python3.11+`, `rustc 1.95` (pinned), and — for the formal
+layer — Coq 8.18 with Iris/stdpp (and a built lambda-rust for the RustBelt tier;
+see `token-budgets-formals/coq/README.md`). Set `ANTHROPIC_API_KEY` and
+`OPENAI_API_KEY` for `--with-live`.
+
+## Related repos
 
 The end-to-end reproduction (catalog audit, formal proofs, microbenchmarks,
 live-API replication) is driven by `reproduce.sh`. The artifact spans several
