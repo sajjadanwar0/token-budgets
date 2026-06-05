@@ -151,6 +151,21 @@ repositories:
 }
 ```
 
+
+If you cite the dataset independently of the paper (the catalogue and/or
+either IRR re-annotation), please also cite the Hugging Face dataset:
+
+```bibtex
+@misc{khan2026tokenbudgetscatalog,
+  title        = {token-budgets-catalog: Empirical Catalogue and
+                  Inter-Rater Reliability Data for the {Token Budgets} Paper},
+  author       = {Khan, Sajjad},
+  year         = {2026},
+  publisher    = {Hugging Face},
+  howpublished = {\url{https://huggingface.co/datasets/sajjadanwar0/token-budgets-catalog}}
+}
+```
+
 ## License
 
 Paper: CC BY 4.0 (arXiv). Code: see the repository `LICENSE` file.
